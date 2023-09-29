@@ -1,0 +1,1 @@
+<%@ Control Language="C#" Inherits="DotNetNuke.UI.Skins.Controls.Logo" CodeBehind="Logo.ascx.cs" %>

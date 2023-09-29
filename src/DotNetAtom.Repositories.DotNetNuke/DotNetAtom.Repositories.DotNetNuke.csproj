@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>11</LangVersion>
+        <RootNamespace>DotNetAtom</RootNamespace>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DotNetNuke.Abstractions" Version="9.11.1" />
+        <PackageReference Include="DotNetNuke.Core" Version="9.11.1" />
+        <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.11.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
+        <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj" />
+      <ProjectReference Include="..\DotNetAtom.Core\DotNetAtom.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Web" />
+    </ItemGroup>
+
+</Project>
