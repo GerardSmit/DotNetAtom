@@ -1,10 +1,16 @@
+using System.Diagnostics.CodeAnalysis;
+using DotNetAtom.Entities;
 using HttpStack;
 
 namespace DotNetAtom.Tabs;
 
 public interface ITabRoute
 {
-    bool IsMatch(PathString path, out RouteMatch match);
+    ITabInfo Tab { get; }
 
-    bool TryGetPath(int tabId, out PathString path);
+    ITabRoute? Parent { get; set; }
+
+    bool IsMatch(IHttpRequest request);
+
+    bool TryGetPath([NotNullWhen(true)] out string? path);
 }

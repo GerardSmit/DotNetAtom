@@ -9,7 +9,7 @@
         <PackageTags>dotnetatom</PackageTags>
         <PackageProjectUrl>https://github.com/GerardSmit/DotNetAtom</PackageProjectUrl>
         <PackageLicense>https://github.com/GerardSmit/DotNetAtom/blob/main/LICENSE</PackageLicense>
-        <NoWarn>$(NoWarn);CS0436;CS9057;NU5128;CS1620;CS8618;ASP0003</NoWarn>
+        <NoWarn>$(NoWarn);CS0436;CS9057;NU5128;CS1620;ASP0003</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>

@@ -2,10 +2,12 @@ using System;
 using System.Reflection;
 using DotNetAtom;
 using DotNetAtom.DesktopModules.HTML;
+using DotNetAtom.Providers;
 using DotNetAtom.Repositories.DapperAOT;
 using HttpStack.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 
 new HtmlModule(); // TODO: Remove this line when assembly loading is fixed.
@@ -22,7 +24,10 @@ builder.Services.AddDotNetAtom(atom =>
     }
 
     atom.AddDapperAOT(connectionString);
+    atom.AddTripleDES("5FDB5CE1F4531470763A34A78398E3D355EFF4EE57426EFB");
 });
+
+builder.Services.AddSingleton<ITabProvider, TestTabProvider>();
 
 var app = builder.Build();
 

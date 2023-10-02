@@ -35,7 +35,7 @@ public class ModuleControlService : IModuleControlService
 
     public async Task<Control?> CreateModuleControlAsync(Page page, IPortalSettings settings, IModuleInfo module, string? controlKey)
     {
-        var definition = _moduleService.GetDefinition(module.ModuleDefinitionId);
+        var definition = _moduleService.GetDefinition(module);
 
         if (!definition.Controls.TryGetValue(controlKey, out var controlDefinition) ||
             controlDefinition.ControlSrc is null)

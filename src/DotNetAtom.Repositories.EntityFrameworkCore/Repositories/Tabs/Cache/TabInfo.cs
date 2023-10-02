@@ -34,7 +34,7 @@ internal class TabInfo : ITabInfo
         Permissions = tab.TabPermissions.Select(p => new TabPermissionInfo(p)).ToArray();
     }
 
-    public int TabId { get; }
+    public int? TabId { get; }
 
     public int TabOrder { get; }
 

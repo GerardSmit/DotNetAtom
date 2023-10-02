@@ -16,6 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Providers.Encryption\DotNetAtom.Providers.Encryption.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.DDRMenu\DotNetAtom.Extensions.DDRMenu.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.HTML\DotNetAtom.Extensions.HTML.csproj" />
         <ProjectReference Include="..\DotNetAtom.Repositories.DapperAOT\DotNetAtom.Repositories.DapperAOT.csproj"/>
@@ -39,7 +40,5 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-
 
 </Project>

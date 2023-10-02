@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DotNetAtom.Entities;
 using DotNetAtom.Framework;
 using DotNetAtom.Portals;
+using DotNetAtom.Providers;
 using DotNetAtom.Skins;
 using Microsoft.Extensions.DependencyInjection;
 using WebFormsCore.UI;
@@ -20,8 +21,8 @@ public partial class Default : Page
     {
         await base.OnInitAsync(token);
 
-        Page.Csp.Enabled = true;
-        Page.Csp.FontSrc.Add(new Uri("https://fonts.gstatic.com"));
+        // Page.Csp.Enabled = true;
+        // Page.Csp.FontSrc.Add(new Uri("https://fonts.gstatic.com"));
 
         await LoadSkinAsync();
     }
@@ -36,8 +37,9 @@ public partial class Default : Page
         }
 
         var skinSrc = tab.SkinSrc;
+        var forceDefaultSkin = Request.Query.ContainsKey("ctl");
 
-        if (skinSrc is null && !portal.Settings.TryGetValue("DefaultPortalSkin", out skinSrc))
+        if ((forceDefaultSkin || skinSrc is null) && !portal.Settings.TryGetValue("DefaultPortalSkin", out skinSrc))
         {
             return;
         }
@@ -57,6 +59,10 @@ public partial class Default : Page
         {
             await Body.Controls.AddAsync(skin);
         }
+
+        var titleProvider = Context.RequestServices.GetRequiredService<ITabTitleProvider>();
+
+        title.Text = await titleProvider.GetTitleAsync(tab);
     }
 
     protected override ValueTask OnPreRenderAsync(CancellationToken token)

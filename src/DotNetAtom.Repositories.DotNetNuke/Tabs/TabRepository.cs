@@ -55,7 +55,7 @@ public class TabInfoWrapper : ITabInfo
             .ToArray();
     }
 
-    public int TabId => _tab.TabID;
+    public int? TabId => _tab.TabID;
 
     public int TabOrder => _tab.TabOrder;
 
@@ -124,7 +124,7 @@ public class ModuleInfoWrapper : IModuleInfo
 
     public string? ModuleTitle => _module.ModuleTitle;
 
-    public int ModuleId => _module.ModuleID;
+    public int? ModuleId => _module.ModuleID;
 
     public string PaneName => _module.PaneName;
 
@@ -134,7 +134,9 @@ public class ModuleInfoWrapper : IModuleInfo
 
     public string ModuleName => _module.DesktopModule.ModuleName;
 
-    public int ModuleDefinitionId => _module.ModuleDefID;
+    public int? ModuleDefinitionId => _module.ModuleDefID;
+
+    public string? ModuleDefinitionFriendlyName => _module.ModuleDefinition.FriendlyName;
 
     public string? HtmlContent => _module.Content;
 

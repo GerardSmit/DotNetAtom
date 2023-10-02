@@ -9,6 +9,7 @@ public class ModuleDefinitionInfo : IModuleDefinitionInfo
     public ModuleDefinitionInfo(ModuleDefinition moduleDefinition)
     {
         ModuleDefId = moduleDefinition.Id;
+        FriendlyName = moduleDefinition.FriendlyName;
         DesktopModule = new DesktopModuleInfo(moduleDefinition.DesktopModule);
         Controls = moduleDefinition.ModuleControls
             .ToDictionary(
@@ -17,6 +18,8 @@ public class ModuleDefinitionInfo : IModuleDefinitionInfo
     }
 
     public int ModuleDefId { get; }
+
+    public string FriendlyName { get; }
 
     public IDesktopModuleInfo DesktopModule { get; }
 

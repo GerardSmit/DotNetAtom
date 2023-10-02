@@ -5,12 +5,12 @@ using DotNetAtom.UI.Skins;
 
 namespace DotNetAtom.Tabs.Entities;
 
-public class ActiveTabInfo : ITabInfo
+public class ActiveTabInfo : ITabInfo, IEquatable<ActiveTabInfo>
 {
     private ITabInfo _tabInfo = default!;
     private Dictionary<string, IPane>? _panes;
 
-    public int TabId => _tabInfo.TabId;
+    public int? TabId => _tabInfo.TabId;
 
     public int TabOrder => _tabInfo.TabOrder;
 
@@ -65,5 +65,23 @@ public class ActiveTabInfo : ITabInfo
     {
         _tabInfo = default!;
         _panes?.Clear();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return _tabInfo.Equals(obj);
+    }
+
+    public bool Equals(ActiveTabInfo? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return _tabInfo.Equals(other._tabInfo);
+    }
+
+    public override int GetHashCode()
+    {
+        // ReSharper disable once NonReadonlyMemberInGetHashCode
+        return _tabInfo.GetHashCode();
     }
 }

@@ -6,7 +6,7 @@ namespace DotNetAtom.Entities;
 
 public interface ITabInfo
 {
-    int TabId { get; }
+    int? TabId { get; }
 
     int TabOrder { get; }
 

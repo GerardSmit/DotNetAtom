@@ -1,6 +1,7 @@
-<%@ Control Language="C#" AutoEventWireup="false" Explicit="True" Inherits="DotNetAtom.UI.Skins.Skin" %>
+<%@ Control language="C#" AutoEventWireup="false" Explicit="True" Inherits="DotNetAtom.UI.Skins.Skin" %>
 <%@ Register TagPrefix="dnn" TagName="LOGO" Src="~/Admin/Skins/Logo.ascx" %>
-<%@ Register TagPrefix="dnn" TagName="MENU" Src="~/DesktopModules/DDRMenu/Menu.ascx" %>
+<%@ Register TagPrefix="dnn" TagName="MENU" src="~/DesktopModules/DDRMenu/Menu.ascx" %>
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 
 <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -52,7 +53,7 @@
                         <span class="icon-bar"></span>
                     </button>
                 </div>
-                <div id="navbar" class="collapse navbar-collapse pull-right">
+                <div id="navbar" class="collapse navbar-collapse pull-right"> 
                     <dnn:MENU ID="MENU" MenuStyle="Menus/MainMenu" runat="server" NodeSelector="*"></dnn:MENU>
                 </div>
             </div>
@@ -61,55 +62,20 @@
 
     <!-- Page Content -->
     <div class="container">
-        <main role="main">
-            <div class="row dnnpane">
-                <div id="HeaderPane" class="col-md-12 headerPane" runat="server"></div> 
-            </div>
+        <main class="no-bg" role="main">
             <div id="breadcrumb" class="col-md-12">
             </div>
-            <div id="mainContent-inner">
+            <div id="mainContent-inner">                     
                 <div class="row dnnpane">
                     <div id="ContentPane" class="col-md-12 contentPane" runat="server"></div>
                 </div>
-
-                <div class="row dnnpane">
-                    <div id="P1_75_1" class="col-md-8 leftPane spacingTop" runat="server"></div>
-                    <div id="P1_25_2" class="col-md-4 rightPane spacingTop" runat="server"></div>
-                </div>
-
-                <div class="row dnnpane">
-                    <div id="P2_25_1" class="col-md-4 spacingTop" runat="server"></div>
-                    <div id="P2_75_2" class="col-md-8 spacingTop" runat="server"></div>
-                </div>
-
-                <div class="row dnnpane">
-                    <div id="P3_33_1" class="col-md-4 spacingTop" runat="server"></div>
-                    <div id="P3_33_2" class="col-md-4 spacingTop" runat="server"></div>
-                    <div id="P3_33_3" class="col-md-4 spacingTop" runat="server"></div>
-                </div>
-
-                <div class="row dnnpane">
-                    <div id="ContentPaneLower" class="col-md-12 contentPane spacingTop" runat="server"></div>
-                </div>
             </div><!-- /.mainContent-inner -->
-        </main>
-        <!-- /.mainContent -->
-    </div>
-    <!-- /.container -->
+        </main><!-- /.mainContent -->
+    </div><!-- /.container -->
 
     <!-- Footer -->
     <footer role="contentinfo">
-        <div class="footer-above">
-            <div class="container">
-                <div class="row dnnpane">
-                    <div id="footer_25_1" class="footer-col col-md-3 col-sm-6" runat="server"></div>
-                    <div id="footer_25_2" class="footer-col col-md-3 col-sm-6" runat="server"></div>
-                    <div class="clearfix visible-sm"></div>
-                    <div id="footer_25_3" class="footer-col col-md-3 col-sm-6" runat="server"></div>
-                    <div id="footer_25_4" class="footer-col col-md-3 col-sm-6" runat="server"></div>
-                </div>
-            </div>
-        </div>
+        <%-- No footer panes for the Admin skin --%>
         <div class="footer-below">
             <div class="container">
                 <div class="row dnnpane">
@@ -123,9 +89,8 @@
             </div>
         </div>
     </footer>
-
-</div>
-<!-- /.SiteWrapper -->
+    
+</div><!-- /.SiteWrapper -->
 
 <%-- CSS & JS includes --%>
 <!--#include file="Common/AddFiles.ascx"-->

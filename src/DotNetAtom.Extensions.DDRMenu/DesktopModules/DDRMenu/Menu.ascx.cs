@@ -15,14 +15,12 @@ namespace DotNetAtom.DesktopModules.DDRMenu;
 
 public partial class Menu : PortalModuleBase
 {
-    private readonly ITabService _tabService;
     private readonly ITabRouter _tabRouter;
     private static readonly char[] AnyOf = { '/', '\\' };
     private DdrMenu? _menu;
 
-    public Menu(ITabService tabService, ITabRouter tabRouter)
+    public Menu(ITabRouter tabRouter)
     {
-        _tabService = tabService;
         _tabRouter = tabRouter;
     }
 
@@ -70,51 +68,50 @@ public partial class Menu : PortalModuleBase
     private RootItem CreateRootItem()
     {
         var children = new List<IMenuItem>();
+        var portalId = PortalSettings.Portal.PortalId;
+        var cultureCode = PortalSettings.Portal.CultureCode;
 
-        foreach (var tab in _tabService.Tabs)
+        foreach (var route in _tabRouter.GetChildren(portalId, cultureCode, null))
         {
-            if (!tab.IsVisible)
+            if (!route.Tab.IsVisible)
             {
                 continue;
             }
 
-            if (!tab.ParentId.HasValue)
+            if (!route.Tab.ParentId.HasValue)
             {
-                children.Add(GetTabItem(tab));
+                children.Add(GetTabItem(route));
             }
         }
 
         return new RootItem(children);
     }
 
-    private TabItem GetTabItem(ITabInfo tabInfo)
+    private TabItem GetTabItem(ITabRoute route)
     {
         var tabChildren = new List<IMenuItem>();
+        var portalId = PortalSettings.Portal.PortalId;
+        var cultureCode = PortalSettings.Portal.CultureCode;
 
-        foreach (var child in _tabService.Tabs)
+        foreach (var child in _tabRouter.GetChildren(portalId, cultureCode, route))
         {
-            if (!child.IsVisible)
+            if (!child.Tab.IsVisible)
             {
                 continue;
             }
 
-            if (child.ParentId == tabInfo.TabId)
-            {
-                tabChildren.Add(GetTabItem(child));
-            }
+            tabChildren.Add(GetTabItem(child));
         }
 
         string? path = null;
 
-        var portalId = PortalSettings.Portal.PortalId;
-        var cultureCode = PortalSettings.Portal.CultureCode;
-        var isActive = PortalSettings.ActiveTab?.TabId == tabInfo.TabId;
+        var isActive = PortalSettings.ActiveTab != null && PortalSettings.ActiveTab.Equals(route.Tab);
 
-        if (_tabRouter.TryGetPath(portalId, cultureCode, tabInfo.TabId, out var pathString))
+        if (route.TryGetPath(out var pathString))
         {
-            path = pathString.Value;
+            path = pathString;
         }
 
-        return new TabItem(tabInfo, tabChildren, path, isActive);
+        return new TabItem(route.Tab, tabChildren, path, isActive);
     }
 }

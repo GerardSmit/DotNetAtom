@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using DotNetAtom.Entities;
 using DotNetAtom.Tabs.Routes;
 using HttpStack;
@@ -9,26 +10,32 @@ namespace DotNetAtom.Tabs.Collections;
 internal class RouteCollection : IRouteCollection
 {
     private readonly List<ITabRoute> _routes = new();
+    private Dictionary<int, ITabRoute> _routesById = new();
+
+    public RouteCollection(int? portalId, string? cultureCode)
+    {
+        PortalId = portalId;
+        CultureCode = cultureCode;
+    }
+
+    public ITabRoute? HomeTab { get; set; }
 
     public void Add(ITabInfo tab)
     {
         var path = tab.TabPath.Replace("//", "/");
-
-        _routes.Add(new TabRoute(tab.TabId, new PathString[]
+        var route = new TabRoute(tab, new PathString[]
         {
             path,
             $"{path}/",
             $"{path}.aspx"
-        }));
-    }
+        });
 
-    public void AddHome(int tabId)
-    {
-        _routes.Add(new TabRoute(tabId, new PathString[]
+        _routes.Add(route);
+
+        if (tab.TabId.HasValue)
         {
-            "/",
-            "/Default.aspx"
-        }));
+            _routesById.Add(tab.TabId.Value, route);
+        }
     }
 
     public void Add(ITabRoute route)
@@ -48,14 +55,21 @@ internal class RouteCollection : IRouteCollection
 
     public int Count => _routes.Count;
 
+    public int? PortalId { get; }
+
+    public string? CultureCode { get; }
+
+    public int? HomeTabId { get; set; }
+
     public ITabRoute this[int index] => _routes[index];
 
-    public bool TryMatch(PathString path, out RouteMatch match)
+    public bool TryMatch(IHttpRequest request, [NotNullWhen(true)] out ITabRoute? match)
     {
         foreach (var route in _routes)
         {
-            if (route.IsMatch(path, out match))
+            if (route.IsMatch(request))
             {
+                match = route;
                 return true;
             }
         }
@@ -64,11 +78,16 @@ internal class RouteCollection : IRouteCollection
         return false;
     }
 
-    public bool TryGetPath(int tabId, out PathString path)
+    public bool TryGetPath(ITabInfo tabInfo, [NotNullWhen(true)] out string? path)
     {
         foreach (var route in _routes)
         {
-            if (route.TryGetPath(tabId, out path))
+            if (!route.Tab.Equals(tabInfo))
+            {
+                continue;
+            }
+
+            if (route.TryGetPath(out path))
             {
                 return true;
             }
@@ -76,5 +95,10 @@ internal class RouteCollection : IRouteCollection
 
         path = default;
         return false;
+    }
+
+    public bool TryGetById(int id, [NotNullWhen(true)] out ITabRoute? match)
+    {
+        return _routesById.TryGetValue(id, out match);
     }
 }

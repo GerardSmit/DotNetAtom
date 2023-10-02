@@ -7,70 +7,46 @@ using System.Text;
 
 namespace DotNetAtom.Utils
 {
-    public class SymmetricCryptography<T> where T : SymmetricAlgorithm, new()
+    public class SymmetricCryptography
     {
-        #region Fields
+        private readonly SymmetricAlgorithm _provider;
 
-        private readonly T _provider = new T();
-        private readonly UTF8Encoding _utf8 = new();
-
-        #endregion Fields
-
-        #region Properties
-
-        private byte[] _key;
-
-        public byte[] Key
+        public SymmetricCryptography(SymmetricAlgorithm provider)
         {
-            get { return _key; }
-            set { _key = value; }
+            _provider = provider;
+            provider.GenerateKey();
+            Key = provider.Key;
+            provider.GenerateIV();
+            IV = provider.IV;
         }
 
-        private byte[] _iv;
+        public byte[] Key { get; set; }
 
-        public byte[] IV
+        public byte[] IV { get; set; }
+
+        public SymmetricCryptography(SymmetricAlgorithm provider, byte[] key, byte[]? iv)
         {
-            get { return _iv; }
-            set { _iv = value; }
-        }
+            _provider = provider;
+            Key = key;
 
-        #endregion Properties
-
-        #region Constructors
-
-        public SymmetricCryptography()
-        {
-            _provider.GenerateKey();
-            _key = _provider.Key;
-            _provider.GenerateIV();
-            _iv = _provider.IV;
-        }
-
-        public SymmetricCryptography(byte[] key, byte[] iv)
-        {
-            _key = key;
             if (iv == null)
             {
-                _provider.Key = key;
-                _provider.GenerateIV();
-                iv = _provider.IV;
+                provider.Key = key;
+                provider.GenerateIV();
+                iv = provider.IV;
             }
 
-            _iv = iv;
+            IV = iv;
         }
-
-        #endregion Constructors
-
-        #region Byte Array Methods
 
         public byte[] Encrypt(byte[] input)
         {
-            return Encrypt(input, _key, _iv);
+            return Encrypt(input, Key, IV);
         }
 
         public byte[] Decrypt(byte[] input)
         {
-            return Decrypt(input, _key, _iv);
+            return Decrypt(input, Key, IV);
         }
 
         public byte[] Encrypt(byte[] input, byte[] key, byte[] iv)
@@ -84,23 +60,19 @@ namespace DotNetAtom.Utils
             return Transform(input, _provider.CreateDecryptor(key, iv));
         }
 
-        #endregion Byte Array Methods
-
-        #region String Methods
-
         public string Encrypt(string text)
         {
-            return Encrypt(text, _key, _iv);
+            return Encrypt(text, Key, IV);
         }
 
         public string Decrypt(string text)
         {
-            return Decrypt(text, _key, _iv);
+            return Decrypt(text, Key, IV);
         }
 
         public string Encrypt(string text, byte[] key, byte[] iv)
         {
-            var output = Transform(_utf8.GetBytes(text),
+            var output = Transform(Encoding.UTF8.GetBytes(text),
                 _provider.CreateEncryptor(key, iv));
             return Convert.ToBase64String(output);
         }
@@ -109,21 +81,17 @@ namespace DotNetAtom.Utils
         {
             var output = Transform(Convert.FromBase64String(text),
                 _provider.CreateDecryptor(key, iv));
-            return _utf8.GetString(output);
+            return Encoding.UTF8.GetString(output);
         }
-
-        #endregion String Methods
-
-        #region SecureString Methods
 
         public byte[] Encrypt(SecureString input)
         {
-            return Encrypt(input, _key, _iv);
+            return Encrypt(input, Key, IV);
         }
 
         public void Decrypt(byte[] input, out SecureString output)
         {
-            Decrypt(input, out output, _key, _iv);
+            Decrypt(input, out output, Key, IV);
         }
 
         public byte[] Encrypt(SecureString input, byte[] key, byte[] iv)
@@ -164,7 +132,7 @@ namespace DotNetAtom.Utils
 
                     // encode the input as UTF8 first so that we have a
                     // way to explicitly "flush" the byte array afterwards
-                    var utf8Buffer = _utf8.GetBytes(inputBuffer);
+                    var utf8Buffer = Encoding.UTF8.GetBytes(inputBuffer);
                     try
                     {
                         return Encrypt(utf8Buffer, key, iv);
@@ -204,7 +172,7 @@ namespace DotNetAtom.Utils
                 {
                     // convert the decrypted array to an explicit
                     // character array that we can "flush" later
-                    outputBuffer = _utf8.GetChars(decryptedBuffer);
+                    outputBuffer = Encoding.UTF8.GetChars(decryptedBuffer);
 
                     // Create the result and copy the characters
                     output = new SecureString();
@@ -233,18 +201,14 @@ namespace DotNetAtom.Utils
             }
         }
 
-        #endregion SecureString Methods
-
-        #region Stream Methods
-
         public void Encrypt(Stream input, Stream output)
         {
-            Encrypt(input, output, _key, _iv);
+            Encrypt(input, output, Key, IV);
         }
 
         public void Decrypt(Stream input, Stream output)
         {
-            Decrypt(input, output, _key, _iv);
+            Decrypt(input, output, Key, IV);
         }
 
         public void Encrypt(Stream input, Stream output, byte[] key,
@@ -258,10 +222,6 @@ namespace DotNetAtom.Utils
         {
             TransformStream(false, ref input, ref output, key, iv);
         }
-
-        #endregion Stream Methods
-
-        #region Private Methods
 
         private byte[] Transform(byte[] input, ICryptoTransform cryptoTransform)
         {
@@ -301,7 +261,5 @@ namespace DotNetAtom.Utils
             // write the transformed buffer to our output stream
             output.Write(outputBuffer, 0, outputBuffer.Length);
         }
-
-        #endregion Private Methods
     }
 }

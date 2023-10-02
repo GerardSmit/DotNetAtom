@@ -28,15 +28,21 @@ internal sealed class AtomMiddleware : IMiddleware
     {
         var portalId = 0;
         var culture = _portalService.GetDefaultCulture(portalId);
-        var path = context.Request.Path.Value ?? string.Empty;
 
-        if (!_tabRouter.Match(portalId, culture, path, out var match) || !match.TabId.HasValue)
+        ITabRoute? match;
+
+        if (context.Request.Path.Equals("/") &&
+            _tabRouter.TryGetHomeTab(portalId, culture, out var homeTab))
+        {
+            match = homeTab;
+        }
+        else if (!_tabRouter.Match(portalId, culture, context.Request, out match))
         {
             await next(context);
             return;
         }
 
-        var tab = _tabService.GetTab(match.TabId.Value);
+        var tab = match.Tab;
         var portal = _portalService.GetPortal(portalId, tab.CultureCode);
         using var atomContext = await _contextFactory.CreateAsync(portal, tab);
 

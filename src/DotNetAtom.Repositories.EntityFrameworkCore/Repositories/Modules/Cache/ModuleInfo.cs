@@ -32,12 +32,10 @@ internal class ModuleInfo : IModuleInfo
     public int TabId { get; }
     public int? PortalId { get; }
     public string? ModuleTitle { get; }
-    public int ModuleId { get; }
+    public int? ModuleId { get; }
     public string PaneName { get; }
     public int ModuleOrder { get; }
-    public string ModuleFolder { get; }
-    public string ModuleName { get; }
-    public int ModuleDefinitionId { get; }
+    public int? ModuleDefinitionId { get; }
     public string? HtmlContent { get; }
     public string? ContainerSrc { get; }
     public DateTime? LastHtmlModifiedOnDate { get; }
@@ -47,4 +45,5 @@ internal class ModuleInfo : IModuleInfo
     public bool InheritViewPermissions { get; }
     public IReadOnlyDictionary<string, string> Settings { get; }
     public IEnumerable<IModulePermissionInfo> Permissions { get; }
+    string? IModuleInfo.ModuleDefinitionFriendlyName => null;
 }

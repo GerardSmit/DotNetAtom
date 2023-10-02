@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DotNetAtom;
 
@@ -9,6 +10,9 @@ public readonly record struct StringKey(string? Value)
     {
         return Value ?? "";
     }
+
+    [MemberNotNullWhen(true, nameof(Value))]
+    public bool HasValue => !string.IsNullOrEmpty(Value);
 
     public static implicit operator StringKey(string? cultureCode) => new(cultureCode);
 

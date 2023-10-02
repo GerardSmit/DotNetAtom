@@ -14,7 +14,7 @@ public class ModuleContainer : Control
     public override async ValueTask RenderAsync(HtmlTextWriter writer, CancellationToken token)
     {
         var moduleService = Context.RequestServices.GetRequiredService<IModuleService>();
-        var module = moduleService.GetDefinition(ModuleInfo.ModuleDefinitionId);
+        var module = moduleService.GetDefinition(ModuleInfo);
 
         await writer.WriteAsync("<div class=\"DnnModule DnnModule-");
         await writer.WriteAsync(module.DesktopModule.ModuleName);

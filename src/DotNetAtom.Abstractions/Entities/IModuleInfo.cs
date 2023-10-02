@@ -11,13 +11,15 @@ public interface IModuleInfo : IEntity
 
     string? ModuleTitle { get; }
 
-    int ModuleId { get; }
+    int? ModuleId { get; }
 
     string PaneName { get; }
 
     int ModuleOrder { get; }
 
-    int ModuleDefinitionId { get; }
+    int? ModuleDefinitionId { get; }
+
+    string? ModuleDefinitionFriendlyName { get; }
 
     string? HtmlContent { get; }
 

@@ -1,6 +1,8 @@
+using DotNetAtom.Entities;
+
 namespace DotNetAtom.Tabs;
 
 public record struct RouteMatch(
-    int? TabId,
+    ITabInfo Tab,
     string CanonicalPath
 );

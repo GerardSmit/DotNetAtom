@@ -4,28 +4,33 @@ using System.Collections.Frozen;
 #endif
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using DotNetAtom.Entities;
 using HttpStack;
 
 namespace DotNetAtom.Tabs.Routes;
 
-[DebuggerDisplay("Path: {" + nameof(DisplayPath) + "} TabId: {" + nameof(_tabId) + "}")]
+[DebuggerDisplay("Path: {" + nameof(DisplayPath) + "}")]
 internal class TabRoute : ITabRoute
 {
-    private readonly int _tabId;
 #if NET8_0_OR_GREATER
     private readonly FrozenSet<string> _paths;
 #else
     private readonly List<string> _paths;
 #endif
 
+    public ITabInfo Tab { get; }
+
+    public ITabRoute? Parent { get; set; }
+
     private string DisplayPath => _paths.FirstOrDefault() ?? "";
 
-    public TabRoute(int tabId, IEnumerable<PathString> paths)
+    public TabRoute(ITabInfo tabInfo, IEnumerable<PathString> paths)
     {
         var stringValues = paths.Where(i => i.HasValue).Select(i => i.Value!);
 
-        _tabId = tabId;
+        Tab = tabInfo;
 
 #if NET8_0_OR_GREATER
         _paths = stringValues.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
@@ -34,37 +39,23 @@ internal class TabRoute : ITabRoute
 #endif
     }
 
-    public bool IsMatch(PathString fullPath, out RouteMatch match)
+    public bool IsMatch(IHttpRequest request)
     {
-        if (!fullPath.HasValue)
+        if (!request.Path.HasValue)
         {
-            match = default;
             return false;
         }
 
 #if NET8_0_OR_GREATER
-        if (_paths.Contains(fullPath.Value!))
+        return _paths.Contains(request.Path.Value!);
 #else
-        if (_paths.Contains(fullPath.Value!, StringComparer.OrdinalIgnoreCase))
+        return _paths.Contains(request.Path.Value!, StringComparer.OrdinalIgnoreCase);
 #endif
-        {
-            match = new RouteMatch(_tabId, fullPath.Value!);
-            return true;
-        }
-
-        match = default;
-        return false;
     }
 
-    public bool TryGetPath(int tabId, out PathString path)
+    public bool TryGetPath([NotNullWhen(true)] out string? path)
     {
-        if (_tabId == tabId && _paths.Count > 0)
-        {
-            path = _paths.First();
-            return true;
-        }
-
-        path = default;
-        return false;
+        path = _paths.FirstOrDefault();
+        return path != null;
     }
 }

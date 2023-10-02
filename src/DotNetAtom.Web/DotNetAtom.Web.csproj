@@ -1,4 +1,4 @@
-<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.31">
+<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.33">
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
@@ -9,13 +9,14 @@
     
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0-preview.7.23375.6" />
-        <PackageReference Include="WebFormsCore.Extensions.ClientResourceManagement" Version="0.0.1-alpha.31" />
+        <PackageReference Include="WebFormsCore.Extensions.ClientResourceManagement" Version="0.0.1-alpha.33" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DotNetAtom.Core\DotNetAtom.Core.csproj" />
 
     </ItemGroup>
+
 
 
 </Project>

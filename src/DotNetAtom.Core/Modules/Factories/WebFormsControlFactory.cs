@@ -9,8 +9,12 @@ public class WebFormsControlFactory : IModuleControlFactory
 {
     public string Extension => ".ascx";
 
-    public Task<Control?> CreateControlAsync(Page page, IPortalSettings settings, IModuleInfo module,
-        string? controlKey, string controlSrc)
+    public Task<Control?> CreateControlAsync(
+        Page page,
+        IPortalSettings settings,
+        IModuleInfo module,
+        string? controlKey,
+        string controlSrc)
     {
         var control = page.LoadControl(controlSrc);
 

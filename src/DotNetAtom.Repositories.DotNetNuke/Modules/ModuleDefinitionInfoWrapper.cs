@@ -24,6 +24,8 @@ internal class ModuleDefinitionInfoWrapper : IModuleDefinitionInfo
 
     public int ModuleDefId => _moduleDefinition.ModuleDefID;
 
+    public string FriendlyName => _moduleDefinition.FriendlyName;
+
     public IDesktopModuleInfo DesktopModule { get; }
 
     public IReadOnlyDictionary<StringKey, IModuleControlInfo> Controls { get; }

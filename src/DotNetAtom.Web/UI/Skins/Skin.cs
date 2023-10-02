@@ -8,7 +8,6 @@ using DotNetAtom.Modules;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebFormsCore.UI;
-using WebFormsCore.UI.HtmlControls;
 using WebFormsCore.UI.WebControls;
 
 namespace DotNetAtom.UI.Skins;
@@ -70,17 +69,27 @@ public partial class Skin : UserControlBase, INamingContainer
         var moduleService = ServiceProvider.GetRequiredService<IModuleControlService>();
         var logger = ServiceProvider.GetRequiredService<ILogger<Skin>>();
 
-        var mid = Request.Query.TryGetValue("mid", out var midValue) && int.TryParse(midValue, out var midInt)
-            ? midInt
-            : -1;
-
         var ctl = Request.Query.TryGetValue("ctl", out var ctlValue)
             ? (StringKey)ctlValue[0]
             : default;
 
+        var mid = Request.Query.TryGetValue("mid", out var midValue) && int.TryParse(midValue, out var midInt)
+            ? midInt
+            : -1;
+
+        if (ctl.HasValue && mid == -1)
+        {
+            return;
+        }
+
         foreach (var tabModule in Tab.TabModules)
         {
             if (tabModule.IsDeleted)
+            {
+                continue;
+            }
+
+            if (mid != -1 && tabModule.ModuleId != mid)
             {
                 continue;
             }

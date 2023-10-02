@@ -5,6 +5,7 @@
         <Features>InterceptorsPreview</Features>
         <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
         <IsTrimmable>true</IsTrimmable>
+        <NoWarn>$(NoWarn);CS8618</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
