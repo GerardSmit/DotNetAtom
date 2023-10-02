@@ -2,11 +2,8 @@
 
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>DotNetAtom</RootNamespace>
         <Features>InterceptorsPreview</Features>
-        <LangVersion>preview</LangVersion>
+        <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
         <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
 
@@ -15,13 +12,6 @@
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
         <PackageReference Include="Dapper.AOT" Version="0.5.0-beta.75"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="PolySharp" Version="1.13.2">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

@@ -17,7 +17,7 @@ public class PortalSettings : IPortalSettings
         set => _portal = value;
     }
 
-    public string LogoFile
+    public string? LogoFile
     {
         get => Portal.LogoFile;
         set => Portal.LogoFile = value;
@@ -28,6 +28,8 @@ public class PortalSettings : IPortalSettings
         get => Portal.PortalName;
         set => Portal.PortalName = value;
     }
+
+    public string? CurrentSkinPath { get; set; }
 
     public void Initialize(IPortalInfo portal, ITabInfo? tab)
     {
@@ -45,5 +47,6 @@ public class PortalSettings : IPortalSettings
         _activeTab.Clear();
         ActiveTab = null;
         _portal = null;
+        CurrentSkinPath = null;
     }
 }

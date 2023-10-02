@@ -10,10 +10,6 @@ namespace DotNetAtom.Entities;
 
 public class TabModule : ITimestamp
 {
-    private IDictionary<string, string>? _settings;
-    private HtmlText? _htmlContent;
-    private readonly IDictionary<int, bool>? _rolePermissions;
-
     /// <inheritdoc cref="IEntity.Id" />
     public int Id { get; set; }
 

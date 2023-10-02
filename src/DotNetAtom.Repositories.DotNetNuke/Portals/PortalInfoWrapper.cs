@@ -1,4 +1,7 @@
-﻿namespace DotNetAtom.Portals;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DotNetAtom.Portals;
 
 public class PortalInfoWrapper : IPortalInfo
 {
@@ -10,7 +13,7 @@ public class PortalInfoWrapper : IPortalInfo
         Settings = settings;
     }
 
-    public string FooterText
+    public string? FooterText
     {
         get => _portalInfo.FooterText;
         set => _portalInfo.FooterText = value;
@@ -46,7 +49,7 @@ public class PortalInfoWrapper : IPortalInfo
         set => _portalInfo.AdminTabId = value;
     }
 
-    public string CrmVersion
+    public string? CrmVersion
     {
         get => _portalInfo.CrmVersion;
         set => _portalInfo.CrmVersion = value;
@@ -64,13 +67,13 @@ public class PortalInfoWrapper : IPortalInfo
         set => _portalInfo.DefaultLanguage = value;
     }
 
-    public string Description
+    public string? Description
     {
         get => _portalInfo.Description;
         set => _portalInfo.Description = value;
     }
 
-    public string Email
+    public string? Email
     {
         get => _portalInfo.Email;
         set => _portalInfo.Email = value;
@@ -100,7 +103,7 @@ public class PortalInfoWrapper : IPortalInfo
         set => _portalInfo.HostSpace = value;
     }
 
-    public string KeyWords
+    public string? KeyWords
     {
         get => _portalInfo.KeyWords;
         set => _portalInfo.KeyWords = value;
@@ -112,7 +115,7 @@ public class PortalInfoWrapper : IPortalInfo
         set => _portalInfo.LoginTabId = value;
     }
 
-    public string LogoFile
+    public string? LogoFile
     {
         get => _portalInfo.LogoFile;
         set => _portalInfo.LogoFile = value;
@@ -214,13 +217,13 @@ public class PortalInfoWrapper : IPortalInfo
         set => _portalInfo.UserTabId = value;
     }
 
-    public string AdministratorRoleName
+    public string? AdministratorRoleName
     {
         get => _portalInfo.AdministratorRoleName;
         set => _portalInfo.AdministratorRoleName = value;
     }
 
-    public string RegisteredRoleName
+    public string? RegisteredRoleName
     {
         get => _portalInfo.RegisteredRoleName;
         set => _portalInfo.RegisteredRoleName = value;

@@ -1,14 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using Dapper;
 
 namespace DotNetAtom.Repositories.DapperAOT;
 
-public class ColumnAttributeTypeMapper : SqlMapper.ITypeMap
+internal class ColumnAttributeTypeMapper : SqlMapper.ITypeMap
 {
     private readonly Dictionary<string, string> _columnMap;
     private readonly DefaultTypeMap _defaultMapper;
 
-    public ColumnAttributeTypeMapper(Type type)
+    internal ColumnAttributeTypeMapper(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type)
     {
         _defaultMapper = new DefaultTypeMap(type);
 

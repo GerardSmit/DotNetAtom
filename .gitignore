@@ -399,3 +399,5 @@ FodyWeavers.xsd
 .idea/
 
 /.act
+
+appsettings.Development.json

@@ -1,3 +1,5 @@
+using System;
+
 namespace DotNetAtom.Entities;
 
 public class AspNetMembership

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
 using DotNetAtom.Entities.Portals;
+using DotNetAtom.Framework;
 using WebFormsCore.UI;
 
 namespace DotNetAtom.Modules;
@@ -12,4 +13,6 @@ public interface IModuleControlService
         IPortalSettings settings,
         IModuleInfo module,
         string? controlKey);
+
+    string GetModuleName(PortalModuleBase portalModuleBase);
 }

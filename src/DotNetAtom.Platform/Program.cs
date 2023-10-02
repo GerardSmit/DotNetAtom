@@ -1,10 +1,14 @@
 using System;
+using System.Reflection;
 using DotNetAtom;
+using DotNetAtom.DesktopModules.HTML;
 using DotNetAtom.Repositories.DapperAOT;
 using HttpStack.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+
+new HtmlModule(); // TODO: Remove this line when assembly loading is fixed.
 
 var builder = WebApplication.CreateBuilder(args);
 

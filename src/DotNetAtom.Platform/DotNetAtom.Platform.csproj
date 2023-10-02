@@ -1,4 +1,4 @@
-<Project Sdk="WebFormsCore.SDK.AspNetCore/0.0.1-alpha.31">
+<Project Sdk="WebFormsCore.SDK.AspNetCore/0.0.1-alpha.33">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -16,6 +16,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Extensions.DDRMenu\DotNetAtom.Extensions.DDRMenu.csproj" />
+        <ProjectReference Include="..\DotNetAtom.Extensions.HTML\DotNetAtom.Extensions.HTML.csproj" />
         <ProjectReference Include="..\DotNetAtom.Repositories.DapperAOT\DotNetAtom.Repositories.DapperAOT.csproj"/>
         <ProjectReference Include="..\DotNetAtom.Web\DotNetAtom.Web.csproj"/>
     </ItemGroup>
@@ -36,10 +38,8 @@
         <None Update="DesktopModules\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="DesktopModules\DDRMenu\Menu.ascx">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
+
 
 
 </Project>

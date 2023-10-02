@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Ben.Collections.Specialized;
 using DotNetAtom.Entities;
 using DotNetAtom.Entities.Portals;
+using DotNetAtom.Framework;
 using WebFormsCore.UI;
 
 namespace DotNetAtom.Modules;
@@ -57,5 +59,32 @@ public class ModuleControlService : IModuleControlService
         }
 
         return control;
+    }
+
+    public string GetModuleName(PortalModuleBase portalModuleBase)
+    {
+        var name = portalModuleBase.GetType().Name;
+
+#if NET
+        if (!name.Contains('.'))
+        {
+            return name;
+        }
+#else
+        if (!name.Contains("."))
+        {
+            return name;
+        }
+#endif
+
+        Span<char> span = stackalloc char[name.Length];
+
+        for (var i = 0; i < name.Length; i++)
+        {
+            var c = name[i];
+            span[i] = c == '.' ? '_' : c;
+        }
+
+        return InternPool.Shared.Intern(span);
     }
 }

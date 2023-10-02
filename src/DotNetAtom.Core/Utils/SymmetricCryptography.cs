@@ -191,14 +191,14 @@ namespace DotNetAtom.Utils
         public void Decrypt(byte[] input, out SecureString output, byte[] key,
             byte[] iv)
         {
-            byte[] decryptedBuffer = null;
+            byte[]? decryptedBuffer = null;
 
             try
             {
                 // do our normal decryption of a byte array
                 decryptedBuffer = Decrypt(input, key, iv);
 
-                char[] outputBuffer = null;
+                char[]? outputBuffer = null;
 
                 try
                 {

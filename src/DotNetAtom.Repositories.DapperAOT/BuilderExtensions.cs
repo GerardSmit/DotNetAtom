@@ -1,8 +1,9 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿#pragma warning disable IL2026
+#pragma warning disable IL2072
+
+using System.Linq;
 using Dapper;
 using DotNetAtom.Application;
-using DotNetAtom.Entities;
 using DotNetAtom.EntityFrameworkCore.Repositories.Applications;
 using DotNetAtom.EntityFrameworkCore.Repositories.Tabs;
 using DotNetAtom.Infrastructure.EntityFrameworkCore;

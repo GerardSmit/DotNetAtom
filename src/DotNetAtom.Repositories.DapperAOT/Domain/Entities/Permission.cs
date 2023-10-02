@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System;
+using System.Collections.Generic;
+using Dapper;
 
 namespace DotNetAtom.Entities;
 

@@ -16,8 +16,6 @@ public partial class Default : Page
     private ITabInfo? _tab;
     private IPortalInfo? _portal;
 
-    public string? CurrentSkinPath { get; set; }
-
     protected override async ValueTask OnInitAsync(CancellationToken token)
     {
         await base.OnInitAsync(token);
@@ -47,7 +45,7 @@ public partial class Default : Page
         var skinService = Context.RequestServices.GetRequiredService<ISkinService>();
         skinSrc = skinService.GetSkinSrc(skinSrc, portal);
 
-        CurrentSkinPath = Path.GetDirectoryName(skinSrc);
+        settings.CurrentSkinPath = Path.GetDirectoryName(skinSrc);
 
         var skin = LoadControl(skinSrc);
         skin.ID = "dnn";

@@ -52,7 +52,7 @@ public partial class Skin : UserControlBase, INamingContainer
             if (paneControl is LiteralHtmlControl ||
                 control.NamingContainer != this ||
                 !PaneTagNames.Contains(paneControl.TagName, StringComparer.OrdinalIgnoreCase) ||
-                string.IsNullOrEmpty(paneControl.ID))
+                paneControl.ID is null)
             {
                 continue;
             }

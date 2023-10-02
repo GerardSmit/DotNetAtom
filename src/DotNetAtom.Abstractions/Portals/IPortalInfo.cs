@@ -21,7 +21,7 @@ public interface IPortalInfo
     /// </code>
     /// </example>
     /// </remarks>
-    string FooterText { get; set; }
+    string? FooterText { get; set; }
 
     /// <summary>Gets or sets home directory of the portal (logical path).</summary>
     /// <value>Portal home directory.</value>
@@ -33,11 +33,11 @@ public interface IPortalInfo
 
     /// <summary>Gets fysical path on disk of the home directory of the portal.</summary>
     /// <value>Physical path on disk of the home directory of the portal.</value>
-    string HomeDirectoryMapPath { get; }
+    string? HomeDirectoryMapPath { get; }
 
     /// <summary>Gets fysical path on disk of the home directory of the portal.</summary>
     /// <value>Physical path on disk of the home directory of the portal.</value>
-    string HomeSystemDirectoryMapPath { get; }
+    string? HomeSystemDirectoryMapPath { get; }
 
     /// <summary>Gets or sets userID of the user who is the admininistrator of the portal.</summary>
     /// <value>UserId of the user who is the portal admin.</value>
@@ -52,7 +52,7 @@ public interface IPortalInfo
     int AdminTabId { get; set; }
 
     /// <summary>Gets or sets current host version.</summary>
-    string CrmVersion { get; set; }
+    string? CrmVersion { get; set; }
 
     /// <summary>Gets or sets the Culture Code of the portal.</summary>
     string CultureCode { get; set; }
@@ -63,11 +63,11 @@ public interface IPortalInfo
 
     /// <summary>Gets or sets description of the portal.</summary>
     /// <value>Description of the portal.</value>
-    string Description { get; set; }
+    string? Description { get; set; }
 
     /// <summary>Gets or sets the default e-mail to be used in the portal.</summary>
     /// <value>E-mail of the portal.</value>
-    string Email { get; set; }
+    string? Email { get; set; }
 
     /// <summary>Gets or sets date at which the portal expires.</summary>
     /// <value>Date of expiration of the portal.</value>
@@ -87,7 +87,7 @@ public interface IPortalInfo
 
     /// <summary>Gets or sets keywords (separated by ,) for this portal.</summary>
     /// <value>Keywords seperated by .</value>
-    string KeyWords { get; set; }
+    string? KeyWords { get; set; }
 
     /// <summary>Gets or sets tabId with the login control, page to login.</summary>
     /// <value>TabId of the Login page.</value>
@@ -95,7 +95,7 @@ public interface IPortalInfo
 
     /// <summary>Gets or sets the logo associated with the portal. The admin can set the logo in the portal settings.</summary>
     /// <value>URL of the logo.</value>
-    string LogoFile { get; set; }
+    string? LogoFile { get; set; }
 
     /// <summary>Gets or sets number of portal pages allowed in the portal. 0 means not limited.</summary>
     /// <value>Number of portal pages allowed.</value>
@@ -168,14 +168,14 @@ public interface IPortalInfo
     /// This name is retrieved from the RoleController object.
     /// </summary>
     /// <value>The name of the Administrators group.</value>
-    string AdministratorRoleName { get; set; }
+    string? AdministratorRoleName { get; set; }
 
     /// <summary>
     /// Gets or sets the actual name of the Registerd Users group of the portal.
     /// This name is retrieved from the RoleController object.
     /// </summary>
     /// <value>The name of the Registerd Users group.</value>
-    string RegisteredRoleName { get; set; }
+    string? RegisteredRoleName { get; set; }
 
     /// <summary>
     /// Gets or sets the portal settings.

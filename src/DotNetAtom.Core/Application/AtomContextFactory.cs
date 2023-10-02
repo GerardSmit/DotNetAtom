@@ -66,7 +66,7 @@ internal class AtomContextFactory : IAtomContextFactory
 
         var context = _contextPool.Get();
         context.Factory = this;
-        context.ApplicationId = _applicationId.Value;
+        context.ApplicationId = _applicationId!.Value;
         context.Initialize(portal, tab);
         return new ValueTask<IAtomContext>(context);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -88,7 +89,7 @@ public class Tab : ITimestamp
     [NotMapped]
     public ICollection<TabPermission> TabPermissions { get; set; } = new List<TabPermission>();
 
-    public bool TryGetString(string key, out string str)
+    public bool TryGetString(string key, [NotNullWhen(true)] out string? str)
     {
         var setting = TabSettings.FirstOrDefault(s => s.SettingName == key);
 

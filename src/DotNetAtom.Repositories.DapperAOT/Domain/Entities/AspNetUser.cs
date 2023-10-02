@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 
 namespace DotNetAtom.Entities;

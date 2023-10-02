@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DotNetAtom.Entities;
 
@@ -9,9 +10,9 @@ internal class PortalInfo : IPortalInfo
 {
     public string? FooterText { get; set; }
 
-    public string? HomeDirectory { get; set; }
+    public required string HomeDirectory { get; set; }
 
-    public string? HomeSystemDirectory { get; }
+    public required string HomeSystemDirectory { get; set; }
 
     public string? HomeDirectoryMapPath { get; }
 
@@ -25,9 +26,9 @@ internal class PortalInfo : IPortalInfo
 
     public string? CrmVersion { get; set; }
 
-    public string? CultureCode { get; set; }
+    public required string CultureCode { get; set; }
 
-    public string? DefaultLanguage { get; set; }
+    public required string DefaultLanguage { get; set; }
 
     public string? Description { get; set; }
 
@@ -53,7 +54,7 @@ internal class PortalInfo : IPortalInfo
 
     public int PortalGroupId { get; set; }
 
-    public string? PortalName { get; set; }
+    public required string PortalName { get; set; }
 
     public int RegisteredRoleId { get; set; }
 
@@ -108,6 +109,7 @@ internal class PortalInfo : IPortalInfo
             FooterText = portalLocalization.FooterText,
             GUID = portal.Guid,
             HomeDirectory = portal.HomeDirectory,
+            HomeSystemDirectory = Path.Combine(Directory.GetParent(portal.HomeDirectory)!.FullName, "_default"),
             KeyWords = portalLocalization.KeyWords,
             LogoFile = portalLocalization.LogoFile,
             PortalId = portal.Id,

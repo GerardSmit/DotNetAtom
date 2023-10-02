@@ -1,0 +1,25 @@
+<Project>
+
+    <PropertyGroup>
+        <Version>0.0.1-alpha.1</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <Authors>Gerard Smit</Authors>
+        <RepositoryUrl>https://github.com/GerardSmit/DotNetAtom</RepositoryUrl>
+        <Copyright>Copyright © 2023 GerardSmit</Copyright>
+        <PackageTags>dotnetatom</PackageTags>
+        <PackageProjectUrl>https://github.com/GerardSmit/DotNetAtom</PackageProjectUrl>
+        <PackageLicense>https://github.com/GerardSmit/DotNetAtom/blob/main/LICENSE</PackageLicense>
+        <NoWarn>$(NoWarn);CS0436;CS9057;NU5128;CS1620;CS8618;ASP0003</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="PolySharp" Version="1.13.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

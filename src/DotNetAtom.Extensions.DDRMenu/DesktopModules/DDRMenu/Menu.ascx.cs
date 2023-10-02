@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using DotNetAtom.DesktopModules.DDRMenu.TemplateEngine;
 using DotNetAtom.Entities;
 using DotNetAtom.Framework;
 using DotNetAtom.Tabs;
-using Microsoft.Extensions.DependencyInjection;
+using DotNetAtom.TemplateEngine;
+using DotNetAtom.TemplateEngine.Items;
 using WebFormsCore;
 using WebFormsCore.UI;
 
@@ -17,7 +17,7 @@ public partial class Menu : PortalModuleBase
 {
     private readonly ITabService _tabService;
     private readonly ITabRouter _tabRouter;
-    private static readonly char[] AnyOf = new[] { '/', '\\' };
+    private static readonly char[] AnyOf = { '/', '\\' };
     private DdrMenu? _menu;
 
     public Menu(ITabService tabService, ITabRouter tabRouter)
@@ -34,7 +34,7 @@ public partial class Menu : PortalModuleBase
     {
         base.OnPreRender(args);
 
-        if (MenuStyle is not null && Page is Default { CurrentSkinPath: {} skinPath })
+        if (MenuStyle is not null && PortalSettings.CurrentSkinPath is {} skinPath)
         {
             var lastSeparator = MenuStyle.LastIndexOfAny(AnyOf);
             var name = lastSeparator == -1 ? MenuStyle : MenuStyle.Substring(lastSeparator + 1);
@@ -43,13 +43,14 @@ public partial class Menu : PortalModuleBase
 
             if (File.Exists(path))
             {
-                var menu = DdrMenu.Parse(File.ReadAllText(path));
+                var menu = DdrMenu.Parse(File.ReadAllText(path).AsSpan());
+
                 _menu = menu;
             }
 
             if (File.Exists(css))
             {
-                Page.ClientScript.RegisterStartupStyle(typeof(Menu), "Test", File.ReadAllText(css), true);
+                Page.ClientScript.RegisterStartupStyle(typeof(Menu), MenuStyle, File.ReadAllText(css), true);
             }
         }
     }
@@ -61,6 +62,13 @@ public partial class Menu : PortalModuleBase
             return default;
         }
 
+        var item = CreateRootItem();
+
+        return _menu.RenderAsync(item, writer);
+    }
+
+    private RootItem CreateRootItem()
+    {
         var children = new List<IMenuItem>();
 
         foreach (var tab in _tabService.Tabs)
@@ -76,7 +84,7 @@ public partial class Menu : PortalModuleBase
             }
         }
 
-        return _menu.RenderAsync(new RootItem(children), writer);
+        return new RootItem(children);
     }
 
     private TabItem GetTabItem(ITabInfo tabInfo)
@@ -108,80 +116,5 @@ public partial class Menu : PortalModuleBase
         }
 
         return new TabItem(tabInfo, tabChildren, path, isActive);
-    }
-
-    public class TabItem : RootItem
-    {
-        private readonly ITabInfo _tabInfo;
-        private readonly string? _url;
-        private readonly bool _isActive;
-
-        public TabItem(ITabInfo tabInfo, IReadOnlyList<IMenuItem> children, string? url, bool isActive)
-            : base(children)
-        {
-            _tabInfo = tabInfo;
-            _url = url;
-            _isActive = isActive;
-        }
-
-        public override object? GetNode(string key)
-        {
-            if (key == "TEXT")
-            {
-                return _tabInfo.TabName;
-            }
-
-            if (key == "URL")
-            {
-                return _url;
-            }
-
-            return base.GetNode(key);
-        }
-
-        public override bool TestNode(string key)
-        {
-            if (key == "ENABLED")
-            {
-                return !_tabInfo.DisableLink;
-            }
-
-            if (key == "SELECTED")
-            {
-                return _isActive;
-            }
-
-            return base.TestNode(key);
-        }
-    }
-
-    public class RootItem : IMenuItem
-    {
-        private readonly IReadOnlyList<IMenuItem> _children;
-
-        public RootItem(IReadOnlyList<IMenuItem> children)
-        {
-            _children = children;
-        }
-
-        public virtual object? GetNode(string key)
-        {
-            if (key == "NODE")
-            {
-                return _children;
-            }
-
-            return null;
-        }
-
-        public virtual bool TestNode(string key)
-        {
-            if (key == "NODE")
-            {
-                return _children.Count > 0;
-            }
-
-            return GetNode(key) is not null;
-        }
     }
 }

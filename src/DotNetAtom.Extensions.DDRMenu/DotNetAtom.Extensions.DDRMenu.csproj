@@ -1,0 +1,12 @@
+﻿<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.31">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+        <RootNamespace>DotNetAtom</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj"/>
+    </ItemGroup>
+
+</Project>

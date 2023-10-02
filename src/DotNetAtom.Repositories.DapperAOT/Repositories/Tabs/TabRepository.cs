@@ -1,4 +1,8 @@
-﻿using Dapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using DotNetAtom.Entities;
 using DotNetAtom.Repositories.DapperAOT;
 using DotNetAtom.Tabs;

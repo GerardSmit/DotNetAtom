@@ -1,4 +1,6 @@
-﻿namespace DotNetAtom.Entities;
+﻿using System;
+
+namespace DotNetAtom.Entities;
 
 public interface ITimestamp
 {
