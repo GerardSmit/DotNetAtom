@@ -4,6 +4,7 @@ using DotNetAtom.Modules;
 using DotNetAtom.Modules.Factories;
 using DotNetAtom.Portals;
 using DotNetAtom.Providers;
+using DotNetAtom.Security;
 using DotNetAtom.Skins;
 using DotNetAtom.Tabs;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,7 @@ public static class ServiceExtensions
         services.TryAddSingleton<ITabRouter, TabRouter>();
         services.TryAddSingleton<ISkinService, SkinService>();
         services.TryAddSingleton<IModuleService, ModuleService>();
+        services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
 
         // Application
         services.TryAddSingleton<IAtomContextFactory, AtomContextFactory>();

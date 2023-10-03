@@ -112,10 +112,10 @@ public class ModuleInfoWrapper : IModuleInfo
         _module = module;
     }
 
-    public int Id
+    public int? Id
     {
         get => _module.ModuleID;
-        set => _module.ModuleID = value;
+        set => _module.ModuleID = value ?? -1;
     }
 
     public int TabId => _module.TabID;

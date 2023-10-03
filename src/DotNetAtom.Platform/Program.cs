@@ -27,7 +27,7 @@ builder.Services.AddDotNetAtom(atom =>
     atom.AddTripleDES("5FDB5CE1F4531470763A34A78398E3D355EFF4EE57426EFB");
 });
 
-builder.Services.AddSingleton<ITabProvider, TestTabProvider>();
+builder.Services.AddSingleton<ITabProvider, LoginTabProvider>();
 
 var app = builder.Build();
 

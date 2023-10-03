@@ -16,6 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Extensions.Login\DotNetAtom.Extensions.Login.csproj" />
         <ProjectReference Include="..\DotNetAtom.Providers.Encryption\DotNetAtom.Providers.Encryption.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.DDRMenu\DotNetAtom.Extensions.DDRMenu.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.HTML\DotNetAtom.Extensions.HTML.csproj" />

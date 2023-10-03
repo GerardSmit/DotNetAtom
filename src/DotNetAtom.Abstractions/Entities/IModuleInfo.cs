@@ -5,6 +5,7 @@ namespace DotNetAtom.Entities;
 
 public interface IModuleInfo : IEntity
 {
+    int? Id { get; set; }
     int TabId { get; }
 
     int? PortalId { get; }

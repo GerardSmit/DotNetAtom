@@ -36,7 +36,7 @@ internal class ModuleInfo : IModuleInfo
         ModuleTitle = tabModule.ModuleTitle;
     }
 
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public int TabId { get; }
     public int? PortalId { get; }
     public string? ModuleTitle { get; }

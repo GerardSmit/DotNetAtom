@@ -76,6 +76,8 @@ public abstract class AtomDbContext : DbContext
 
     public DbSet<PackageType> PackageType { get; set; } = null!;
 
+    public DbSet<Authentication> Authentication { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -2,6 +2,7 @@
 using DotNetAtom.Applications;
 using DotNetAtom.Modules;
 using DotNetAtom.Portals;
+using DotNetAtom.Security;
 using DotNetAtom.Tabs;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,7 @@ public static class DnnBuilderExtensions
         builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
         builder.Services.AddSingleton<ITabRepository, TabRepository>();
+        builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
 
         return builder;
     }

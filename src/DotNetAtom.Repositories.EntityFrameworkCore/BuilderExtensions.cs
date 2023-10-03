@@ -6,6 +6,8 @@ using DotNetAtom.EntityFrameworkCore.Repositories.Tabs;
 using DotNetAtom.Infrastructure.EntityFrameworkCore;
 using DotNetAtom.Modules;
 using DotNetAtom.Portals;
+using DotNetAtom.Repositories.EntityFrameworkCore.Repositories.Security;
+using DotNetAtom.Security;
 using DotNetAtom.Tabs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,7 @@ public static class BuilderExtensions
         builder.Services.AddSingleton<IModuleRepository, ModuleRepository>();
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
         builder.Services.AddSingleton<ITabRepository, TabRepository>();
+        builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
 
         builder.Services.AddDbContextFactory<TContext>(b =>
         {
