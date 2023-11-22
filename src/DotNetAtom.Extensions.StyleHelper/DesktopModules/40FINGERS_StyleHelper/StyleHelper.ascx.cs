@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using DotNetAtom.Framework;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebFormsCore;
 using WebFormsCore.Features;
 
 namespace DotNetAtom.DesktopModules._40FINGERS_StyleHelper;
@@ -36,11 +37,13 @@ public partial class StyleHelper : PortalModuleBase
 
 		if (RemoveCssFile == "/")
 		{
-			collection.RemoveAll(x => x.FilePath is not null && x.FilePath.StartsWith("/"));
+			collection.RemoveAll(x => x.DependencyType is ClientDependencyType.Css);
 		}
 		else if (Regex.Escape(RemoveCssFile) == RemoveCssFile)
 		{
-			collection.RemoveAll(x => x.FilePath is not null && x.FilePath.IndexOf(RemoveCssFile, StringComparison.OrdinalIgnoreCase) != -1);
+			collection.RemoveAll(x =>
+				x is { DependencyType: ClientDependencyType.Css, FilePath: {} filePath } &&
+				filePath.IndexOf(RemoveCssFile, StringComparison.OrdinalIgnoreCase) != -1);
 		}
 		else
 		{
@@ -48,7 +51,9 @@ public partial class StyleHelper : PortalModuleBase
 			{
 				var regex = new Regex(RemoveCssFile, RegexOptions.IgnoreCase);
 
-				collection.RemoveAll(x => x.FilePath is not null && regex.IsMatch(x.FilePath));
+				collection.RemoveAll(x =>
+					x is { DependencyType: ClientDependencyType.Css, FilePath: {} filePath } &&
+					regex.IsMatch(filePath));
 			}
 			catch (Exception ex)
 			{

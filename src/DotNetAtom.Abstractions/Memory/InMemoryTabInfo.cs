@@ -17,6 +17,7 @@ public class InMemoryTabInfo : ITabInfo
     public required string TabPath { get; set; }
     public bool IsVisible { get; set; }
     public bool IsDeleted { get; set; }
+    public bool IsAdmin { get; set; }
     public bool DisableLink { get; set; }
     public string? Description { get; set; }
     public string? SkinSrc { get; set; }

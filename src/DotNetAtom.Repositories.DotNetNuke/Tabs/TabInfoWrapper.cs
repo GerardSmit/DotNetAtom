@@ -43,6 +43,8 @@ public class TabInfoWrapper : ITabInfo
 
 	public bool IsDeleted => _tab.IsDeleted;
 
+	public bool IsAdmin => false;
+
 	public bool DisableLink => _tab.DisableLink;
 
 	public string? Description => _tab.Description;

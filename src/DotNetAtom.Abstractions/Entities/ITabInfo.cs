@@ -26,6 +26,8 @@ public interface ITabInfo
 
     bool IsDeleted { get; }
 
+    bool IsAdmin { get; }
+
     bool DisableLink { get; }
 
     string? Description { get; }

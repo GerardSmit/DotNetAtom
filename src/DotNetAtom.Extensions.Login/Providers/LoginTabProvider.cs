@@ -1,46 +1,47 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
 using DotNetAtom.Memory;
+using DotNetAtom.Portals;
 
 namespace DotNetAtom.Providers;
 
-/// <summary>
-/// In-memory tab provider for the login page.
-/// </summary>
-public class LoginTabProvider : ITabProvider
+/// <summary>In-memory tab provider for the login page of each portal that doesn't have a login tab.</summary>
+public class LoginTabProvider(IPortalService portalService) : ITabProvider
 {
     public ValueTask<IReadOnlyList<ITabInfo>> GetTabs()
     {
-        return new ValueTask<IReadOnlyList<ITabInfo>>(
-            new[]
+        var tabs = portalService.Portals
+            .Where(portal => portal.LoginTabId == -1)
+            .Select(portal => new InMemoryTabInfo
             {
-                new InMemoryTabInfo
+                PortalId = portal.PortalId,
+                TabName = "Login",
+                TabPath = "//Login",
+                TabModules =
                 {
-                    TabName = "Login",
-                    TabPath = "//Login",
-                    TabModules =
+                    new InMemoryModuleInfo
                     {
-                        new InMemoryModuleInfo
+                        ModuleDefinition = new InMemoryModuleDefinition
                         {
-                            ModuleDefinition = new InMemoryModuleDefinition
+                            Controls =
                             {
-                                Controls =
+                                [null] = new InMemoryModuleControlInfo
                                 {
-                                    [null] = new InMemoryModuleControlInfo
-                                    {
-                                        ControlSrc = "DesktopModules/Admin/Authentication/Login.ascx"
-                                    }
+                                    ControlSrc = "DesktopModules/Admin/Authentication/Login.ascx"
                                 }
                             }
                         }
-                    },
-                    TabSettings =
-                    {
-                        ["_IsLoginTab"] = "true"
                     }
+                },
+                TabSettings =
+                {
+                    ["_IsLoginTab"] = "true"
                 }
-            }
-        );
+            })
+            .ToList();
+
+        return new ValueTask<IReadOnlyList<ITabInfo>>(tabs);
     }
 }

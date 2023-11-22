@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Ben.Collections.Specialized;
+using DotNetAtom.Entities;
 using DotNetAtom.Portals;
 
 namespace DotNetAtom.Skins;
 
 public class SkinService : ISkinService
 {
+    private static readonly HashSet<string> AdminSkins = new(StringComparer.OrdinalIgnoreCase) { "tab", "module", "importmodule", "exportmodule", "help" };
     private readonly IInternPool _internPool = new InternPool();
     private readonly IAtomGlobals _globals;
 
@@ -55,6 +58,19 @@ public class SkinService : ISkinService
         {
             return _internPool.Intern(span);
         }
+    }
+
+    public bool IsAdminSkin(ITabInfo tabInfo, int? moduleId, string? controlKey)
+    {
+        if (tabInfo.IsAdmin)
+        {
+            return true;
+        }
+
+        var isModuleNull = moduleId is -1 or null;
+
+        return (!string.IsNullOrEmpty(controlKey) && !controlKey!.Equals("view", StringComparison.OrdinalIgnoreCase) && !isModuleNull) ||
+               (!string.IsNullOrEmpty(controlKey) && AdminSkins.Contains(controlKey!) && isModuleNull);
     }
 
     private static void CorrectPathSeparators(Span<char> span)

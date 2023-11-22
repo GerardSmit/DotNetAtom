@@ -30,6 +30,8 @@ public class ActiveTabInfo : ITabInfo, IEquatable<ActiveTabInfo>
 
     public bool IsDeleted => _tabInfo.IsDeleted;
 
+    public bool IsAdmin => _tabInfo.IsAdmin;
+
     public bool DisableLink => _tabInfo.DisableLink;
 
     public string? Description => _tabInfo.Description;

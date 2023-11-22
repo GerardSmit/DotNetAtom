@@ -16,7 +16,8 @@ internal class PortalService : IPortalService
         _repository = repository;
     }
 
-    public IReadOnlyCollection<IPortalInfo> Portals => _portals.Values;
+    public IReadOnlyCollection<IPortalInfo> Portals { get; private set; } = Array.Empty<IPortalInfo>();
+    public IReadOnlyCollection<IPortalInfo> PortalCultures => _portals.Values;
 
     public IPortalInfo GetPortal(int portalId, string? culture = null)
     {
@@ -53,9 +54,12 @@ internal class PortalService : IPortalService
 
         var result = new Dictionary<PortalCultureKey, IPortalInfo>(PortalCultureKey.OrdinalIgnoreCase);
         var defaultCultures = new Dictionary<int, string>();
+        var portalIds = new HashSet<int>();
 
         foreach (var portal in portals)
         {
+            portalIds.Add(portal.PortalId);
+
             if (!defaultCultures.ContainsKey(portal.PortalId))
             {
                 defaultCultures.Add(portal.PortalId, portal.DefaultLanguage);
@@ -68,5 +72,9 @@ internal class PortalService : IPortalService
 
         _portals = result;
         _defaultCultures = defaultCultures;
+
+        Portals = portalIds
+            .Select(portalId => GetPortal(portalId))
+            .ToList();
     }
 }

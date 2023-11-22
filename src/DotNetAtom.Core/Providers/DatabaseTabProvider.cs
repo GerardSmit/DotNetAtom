@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
+using DotNetAtom.Portals;
 using DotNetAtom.Tabs;
 
 namespace DotNetAtom.Providers;

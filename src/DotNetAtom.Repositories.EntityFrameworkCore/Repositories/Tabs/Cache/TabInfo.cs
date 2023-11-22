@@ -55,6 +55,8 @@ internal class TabInfo : ITabInfo
 
     public bool IsDeleted { get; }
 
+    public bool IsAdmin => false;
+
     public bool DisableLink { get; }
 
     public string? Description { get; }

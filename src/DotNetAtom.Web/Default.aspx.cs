@@ -28,6 +28,19 @@ public partial class Default : Page
         await LoadSkinAsync();
     }
 
+    private string GetDefaultSkinSetting(ISkinService skinService, ITabInfo tab)
+    {
+        var mid = Request.Query.TryGetValue("mid", out var midValue) && int.TryParse(midValue, out var midInt)
+            ? midInt
+            : -1;
+
+        var ctl = Request.Query.TryGetValue("ctl", out var ctlValue)
+            ? (StringKey)ctlValue[0]
+            : default;
+
+        return skinService.IsAdminSkin(tab, mid, ctl) ? "DefaultAdminSkin" : "DefaultPortalSkin";
+    }
+
     private async Task LoadSkinAsync()
     {
         var settings = Context.Features.Get<IAtomFeature>()?.AtomContext.PortalSettings;
@@ -39,13 +52,13 @@ public partial class Default : Page
 
         var skinSrc = tab.SkinSrc;
         var forceDefaultSkin = Request.Query.ContainsKey("ctl");
+        var skinService = Context.RequestServices.GetRequiredService<ISkinService>();
 
-        if ((forceDefaultSkin || skinSrc is null) && !portal.Settings.TryGetValue("DefaultPortalSkin", out skinSrc))
+        if ((forceDefaultSkin || skinSrc is null) && !portal.Settings.TryGetValue(GetDefaultSkinSetting(skinService, tab), out skinSrc))
         {
             return;
         }
 
-        var skinService = Context.RequestServices.GetRequiredService<ISkinService>();
         skinSrc = skinService.GetSkinSrc(skinSrc, portal);
 
         var webFormsEnvironment = Context.RequestServices.GetRequiredService<IWebFormsEnvironment>();
