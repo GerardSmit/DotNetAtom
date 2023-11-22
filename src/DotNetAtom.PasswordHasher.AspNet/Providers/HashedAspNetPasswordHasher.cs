@@ -1,29 +1,12 @@
 ﻿using System;
+using System.Buffers;
 using System.Security.Cryptography;
 using System.Text;
-using DotNetAtom.Crypto;
-using DotNetAtom.Options;
-using Microsoft.Extensions.Options;
 
 namespace DotNetAtom.Providers;
 
-internal class HashedAspNetPasswordHasher(IOptions<MachineOptions> options) : IPasswordHasher
+internal class HashedAspNetPasswordHasher : IPasswordHasher
 {
-	private readonly SymmetricCryptography? _cryptography = GetSymmetricCryptography(options.Value.DecryptionKey);
-
-	private static SymmetricCryptography? GetSymmetricCryptography(string? keyString)
-	{
-		if (keyString is null || keyString.Length == 0)
-		{
-			return null;
-		}
-
-		var key = HexEncoding.GetBytes(keyString, out _);
-		var iv = new byte[8];
-
-		return new SymmetricCryptography(TripleDES.Create(), key, iv);
-	}
-
 	/// <inheritdoc />
 	public int Format => 1;
 
@@ -36,7 +19,9 @@ internal class HashedAspNetPasswordHasher(IOptions<MachineOptions> options) : IP
 	/// <inheritdoc />
 	public string HashPassword(int format, string password, string passwordSalt)
 	{
-		var bIn = Encoding.Unicode.GetBytes(password);
+		var bIn = ArrayPool<byte>.Shared.Rent(Encoding.Unicode.GetMaxByteCount(password.Length));
+		var bInLength = Encoding.Unicode.GetBytes(password, 0, password.Length, bIn, 0);
+
 		var bSalt = Convert.FromBase64String(passwordSalt);
 		byte[]? bRet;
 
@@ -67,15 +52,22 @@ internal class HashedAspNetPasswordHasher(IOptions<MachineOptions> options) : IP
 				kha.Key = bKey;
 			}
 
-			bRet = kha.ComputeHash(bIn);
+			bRet = kha.ComputeHash(bIn, 0, bInLength);
 		}
 		else
 		{
-			var bAll = new byte[bSalt.Length + bIn.Length];
-			Buffer.BlockCopy(bSalt, 0, bAll, 0, bSalt.Length);
-			Buffer.BlockCopy(bIn, 0, bAll, bSalt.Length, bIn.Length);
-			bRet = hm.ComputeHash(bAll);
+			var bAllLength = bSalt.Length + bInLength;
+			var bAll = ArrayPool<byte>.Shared.Rent(bAllLength);
+
+			bSalt.AsSpan().CopyTo(bAll.AsSpan());
+			bIn.AsSpan(0, bInLength).CopyTo(bAll.AsSpan(bSalt.Length));
+
+			bRet = hm.ComputeHash(bAll, 0, bAllLength);
+
+			ArrayPool<byte>.Shared.Return(bAll, true);
 		}
+
+		ArrayPool<byte>.Shared.Return(bIn, true);
 
 		return Convert.ToBase64String(bRet);
 	}

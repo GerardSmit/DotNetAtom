@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetAtom.PasswordHasher.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetAtom.Web.Abstractions", "src\DotNetAtom.Web.Abstractions\DotNetAtom.Web.Abstractions.csproj", "{126DFBA0-94A7-4DC4-B3BA-D41079789DBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetAtom.Extensions.StyleHelper", "src\DotNetAtom.Extensions.StyleHelper\DotNetAtom.Extensions.StyleHelper.csproj", "{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{126DFBA0-94A7-4DC4-B3BA-D41079789DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126DFBA0-94A7-4DC4-B3BA-D41079789DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126DFBA0-94A7-4DC4-B3BA-D41079789DBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F0EAAB97-9AA4-4A6F-9EB5-F21661431D1E} = {053DF5EF-7B6F-4F51-8086-1D43F2B73334}
@@ -106,5 +112,6 @@ Global
 		{E0A0D535-38A9-4550-940A-F30A144CE1BB} = {4DB8CE2D-949D-407E-80B5-2D9A167FA3DB}
 		{AD59A181-6605-4A5A-8BD4-B07C448768F0} = {E0A0D535-38A9-4550-940A-F30A144CE1BB}
 		{126DFBA0-94A7-4DC4-B3BA-D41079789DBE} = {053DF5EF-7B6F-4F51-8086-1D43F2B73334}
+		{092DAE7B-3C4D-47BD-9BF4-A7B38C0F0503} = {FA9F088A-35B1-41FC-B514-380DAA5A0629}
 	EndGlobalSection
 EndGlobal

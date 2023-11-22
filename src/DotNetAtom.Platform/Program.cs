@@ -1,5 +1,6 @@
 using System;
 using DotNetAtom;
+using DotNetAtom.DesktopModules._40FINGERS_StyleHelper;
 using DotNetAtom.DesktopModules.HTML;
 using DotNetAtom.EntityFrameworkCore;
 using DotNetAtom.Options;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 
 new HtmlModule(); // TODO: Remove this line when assembly loading is fixed.
+new StyleHelper(null!); // TODO: Remove this line when assembly loading is fixed.
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -54,6 +54,11 @@ namespace DotNetAtom.Crypto
             return Encrypt(input, _key, _iv);
         }
 
+        public byte[] Encrypt(byte[] input, int offset, int length)
+        {
+            return Transform(input, offset, length, _provider.CreateEncryptor(_key, _iv));
+        }
+
         public byte[] Decrypt(byte[] input)
         {
             return Decrypt(input, _key, _iv);
@@ -61,13 +66,12 @@ namespace DotNetAtom.Crypto
 
         public byte[] Encrypt(byte[] input, byte[] key, byte[] iv)
         {
-            return Transform(input,
-                _provider.CreateEncryptor(key, iv));
+            return Transform(input, 0, input.Length, _provider.CreateEncryptor(key, iv));
         }
 
         public byte[] Decrypt(byte[] input, byte[] key, byte[] iv)
         {
-            return Transform(input, _provider.CreateDecryptor(key, iv));
+            return Transform(input, 0, input.Length, _provider.CreateDecryptor(key, iv));
         }
 
         #endregion Byte Array Methods
@@ -87,14 +91,16 @@ namespace DotNetAtom.Crypto
         public string Encrypt(string text, byte[] key, byte[] iv)
         {
             using var encryptor = _provider.CreateEncryptor(key, iv);
-            var output = Transform(Encoding.UTF8.GetBytes(text), encryptor);
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var output = Transform(bytes, 0, bytes.Length, encryptor);
             return Convert.ToBase64String(output);
         }
 
         public string Decrypt(string text, byte[] key, byte[] iv)
         {
             using var decryptor = _provider.CreateDecryptor(key, iv);
-            var output = Transform(Convert.FromBase64String(text), decryptor);
+            var bytes = Convert.FromBase64String(text);
+            var output = Transform(bytes, 0, bytes.Length, decryptor);
             return Encoding.UTF8.GetString(output);
         }
 
@@ -247,12 +253,12 @@ namespace DotNetAtom.Crypto
 
         #region Private Methods
 
-        private static byte[] Transform(byte[] input, ICryptoTransform cryptoTransform)
+        private static byte[] Transform(byte[] input, int offset, int length, ICryptoTransform cryptoTransform)
         {
             using var memStream = new MemoryStream();
             using var cryptStream = new CryptoStream(memStream, cryptoTransform, CryptoStreamMode.Write);
 
-            cryptStream.Write(input, 0, input.Length);
+            cryptStream.Write(input, offset, length);
             cryptStream.FlushFinalBlock();
 
             return memStream.ToArray();

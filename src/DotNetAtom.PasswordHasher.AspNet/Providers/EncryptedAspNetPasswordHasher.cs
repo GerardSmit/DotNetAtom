@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Security.Cryptography;
 using System.Text;
 using DotNetAtom.Crypto;
@@ -36,19 +37,17 @@ internal class EncryptedAspNetPasswordHasher(IOptions<MachineOptions> options) :
 	/// <inheritdoc />
 	public string HashPassword(int format, string password, string passwordSalt)
 	{
-		var bIn = Encoding.Unicode.GetBytes(password);
-		var bSalt = Convert.FromBase64String(passwordSalt);
-		byte[]? bRet;
-
 		if (_cryptography is null)
 		{
 			throw new InvalidOperationException("DecryptionKey is not configured.");
 		}
 
-		byte[] bAll = new byte[bSalt.Length + bIn.Length];
-		Buffer.BlockCopy(bSalt, 0, bAll, 0, bSalt.Length);
-		Buffer.BlockCopy(bIn, 0, bAll, bSalt.Length, bIn.Length);
-		bRet = _cryptography.Encrypt(bAll);
+		var bSalt = Convert.FromBase64String(passwordSalt);
+		var bAll = ArrayPool<byte>.Shared.Rent(bSalt.Length + Encoding.Unicode.GetMaxByteCount(password.Length));
+
+		bSalt.AsSpan().CopyTo(bAll);
+		var bInLength = Encoding.Unicode.GetBytes(password, 0, password.Length, bAll, bSalt.Length);
+		var bRet = _cryptography.Encrypt(bAll, 0, bSalt.Length + bInLength);
 
 		return Convert.ToBase64String(bRet);
 	}

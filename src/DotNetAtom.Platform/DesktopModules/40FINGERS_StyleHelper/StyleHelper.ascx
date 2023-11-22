@@ -1,1 +1,0 @@
-<%@ Control Inherits="WebFormsCore.UI.Control" %>

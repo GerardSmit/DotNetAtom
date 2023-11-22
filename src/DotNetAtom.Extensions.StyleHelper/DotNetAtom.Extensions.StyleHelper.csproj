@@ -1,0 +1,16 @@
+<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.38">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+        <RootNamespace>DotNetAtom</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Web.Abstractions\DotNetAtom.Web.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="WebFormsCore.Extensions.ClientResourceManagement" Version="0.0.1-alpha.38" />
+    </ItemGroup>
+
+</Project>

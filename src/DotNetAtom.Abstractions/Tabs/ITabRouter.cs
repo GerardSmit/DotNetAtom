@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -19,6 +20,10 @@ public interface ITabRouter
     bool TryGetById(int? portalId, string? cultureCode, int id, [NotNullWhen(true)] out ITabRoute? match);
 
     bool TryGetPath(int? portalId, string? cultureCode, ITabInfo tabInfo, [NotNullWhen(true)] out string? path);
+
+    bool TryGetByPath(int? portalId, string? cultureCode, string path, [NotNullWhen(true)] out ITabRoute? match);
+
+    bool TryGetByPath(int? portalId, string? cultureCode, ReadOnlyMemory<char> path, [NotNullWhen(true)] out ITabRoute? match);
 
     Task LoadAsync();
 }

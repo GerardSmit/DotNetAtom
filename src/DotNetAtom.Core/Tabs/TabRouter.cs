@@ -32,23 +32,6 @@ internal class TabRouter : ITabRouter
         _logger = logger;
     }
 
-    public IRouteCollection GetTabCollection(int portalId, string? cultureCode = null)
-    {
-        var cultureKey = cultureCode ?? default(StringKey);
-
-        if (!_tabsByPortal.TryGetValue(portalId, out var tabInformation))
-        {
-            throw new KeyNotFoundException($"Portal {portalId} not found");
-        }
-
-        if (!tabInformation.CollectionByCulture.TryGetValue(cultureKey, out var tabs))
-        {
-            throw new KeyNotFoundException($"Portal {portalId} not found");
-        }
-
-        return tabs;
-    }
-
     public IChangeToken ChangeToken => _changeToken;
 
     public IReadOnlyList<ITabRoute> GetChildren(int? portalId, string? cultureCode, ITabRoute? parent = null)
@@ -140,6 +123,11 @@ internal class TabRouter : ITabRouter
         {
             return tabs.TryGetById(id, out match);
         }
+    }
+
+    public bool TryGetByPath(int? portalId, string? cultureCode, string path, [NotNullWhen(true)] out ITabRoute? match)
+    {
+        return TryGetByPath(portalId, cultureCode, path.AsMemory(), out match);
     }
 
     public bool TryGetByPath(int? portalId, string? cultureCode, ReadOnlyMemory<char> path, [NotNullWhen(true)] out ITabRoute? match)
@@ -240,7 +228,7 @@ internal class TabRouter : ITabRouter
 #if NET
         var slashSlash = "//";
 #else
-        Span<char> slashSlash = stackalloc char[] { '/', '/' };
+        ReadOnlySpan<char> slashSlash = stackalloc char[] { '/', '/' };
 #endif
 
         foreach (var collection in allCollections)
@@ -293,19 +281,20 @@ internal class TabRouter : ITabRouter
 
     private bool TryGet<TState, TValue>(int? portalId, string? cultureCode, TState state, [NotNullWhen(true)] out TValue? match, TryGetDelegate<TState, TValue> getter)
     {
-        var cultureKey = cultureCode ?? default(StringKey);
-
-        // Try to match portal-specific tabs
+        StringKey cultureKey = cultureCode ?? default(StringKey);
         RouteCollection? tabs;
 
+        // Try to match portal-specific tabs
         if (portalId.HasValue && _tabsByPortal.TryGetValue(portalId.Value, out var portalInfo))
         {
+            // Try to match portal-specific tabs by culture
             if (portalInfo.CollectionByCulture.TryGetValue(cultureKey, out tabs) &&
                 getter(state, out match, tabs))
             {
                 return true;
             }
 
+            // Try to match portal-specific tabs by default culture
             if (portalInfo.DefaultString != cultureKey &&
                 portalInfo.CollectionByCulture.TryGetValue(portalInfo.DefaultString, out tabs) &&
                 getter(state, out match, tabs))
@@ -313,6 +302,7 @@ internal class TabRouter : ITabRouter
                 return true;
             }
 
+            // Try to match portal-specific tabs by invariant culture
             if (portalInfo.CollectionByCulture.TryGetValue(default, out tabs) &&
                 getter(state, out match, tabs))
             {
@@ -320,13 +310,14 @@ internal class TabRouter : ITabRouter
             }
         }
 
-        // Try to match global tabs
+        // Try to match global tabs by the current culture
         if (_globalTabsByCulture.TryGetValue(cultureKey, out tabs) &&
             getter(state, out match, tabs))
         {
             return true;
         }
 
+        // Try to match global tabs by invariant culture
         if (_globalTabsByCulture.TryGetValue(default, out tabs) &&
             getter(state, out match, tabs))
         {

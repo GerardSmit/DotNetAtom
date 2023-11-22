@@ -7,9 +7,11 @@ using DotNetAtom.Framework;
 using DotNetAtom.Portals;
 using DotNetAtom.Providers;
 using DotNetAtom.Skins;
+using DotNetAtom.Web.Client.ClientResourceManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebFormsCore;
+using WebFormsCore.Features;
 using WebFormsCore.UI;
 
 namespace DotNetAtom;
@@ -72,7 +74,12 @@ public partial class Default : Page
 
             if (File.Exists(Path.Combine(contentRootPath, "Portals", "_default", "default.css")))
             {
-                Page.ClientScript.RegisterStartupStyleLink(typeof(Default), "DefaultCss", "/Portals/_default/default.css");
+                var collection = Context.RequestServices.GetRequiredService<IClientDependencyCollection>();
+
+                collection.Add(new DnnCssInclude
+                {
+                    FilePath = "/Portals/_default/default.css"
+                });
             }
         }
 

@@ -14,6 +14,7 @@
         <ProjectReference Include="..\DotNetAtom.Extensions.Login\DotNetAtom.Extensions.Login.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.DDRMenu\DotNetAtom.Extensions.DDRMenu.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.HTML\DotNetAtom.Extensions.HTML.csproj" />
+        <ProjectReference Include="..\DotNetAtom.Extensions.StyleHelper\DotNetAtom.Extensions.StyleHelper.csproj" />
         <ProjectReference Include="..\DotNetAtom.PasswordHasher.AspNet\DotNetAtom.PasswordHasher.AspNet.csproj" />
         <ProjectReference Include="..\DotNetAtom.Repositories.EntityFrameworkCore\DotNetAtom.Repositories.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\DotNetAtom.Web\DotNetAtom.Web.csproj"/>
