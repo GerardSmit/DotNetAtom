@@ -23,6 +23,7 @@ internal class TabInfo : ITabInfo
         DisableLink = tab.DisableLink;
         Description = tab.Description;
         SkinSrc = tab.SkinSrc;
+        ContainerSrc = tab.ContainerSrc;
         KeyWords = tab.KeyWords;
         PageHeadText = tab.PageHeadText;
         Url = tab.Url;
@@ -59,6 +60,8 @@ internal class TabInfo : ITabInfo
     public string? Description { get; }
 
     public string? SkinSrc { get; }
+
+    public string? ContainerSrc { get; set; }
 
     public string? KeyWords { get; }
 

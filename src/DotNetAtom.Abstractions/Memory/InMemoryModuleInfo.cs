@@ -14,7 +14,8 @@ public class InMemoryModuleInfo : IModuleInfo
     public string PaneName { get; set; } = "";
     public int ModuleOrder { get; set; }
     public int? ModuleDefinitionId { get; set; }
-    public required string? ModuleDefinitionFriendlyName { get; set; }
+    public string? ModuleDefinitionFriendlyName { get; set; }
+    public IModuleDefinitionInfo? ModuleDefinition { get; set; }
     public string? HtmlContent { get; set; }
     public string? ContainerSrc { get; set; }
     public DateTime? LastHtmlModifiedOnDate { get; set; }
@@ -22,6 +23,9 @@ public class InMemoryModuleInfo : IModuleInfo
     public DateTime? CreatedOnDate { get; set; }
     public DateTime? LastModifiedOnDate { get; set; }
     public bool InheritViewPermissions { get; set; }
-    public IReadOnlyDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
-    public IEnumerable<IModulePermissionInfo> Permissions { get; set; } = new List<IModulePermissionInfo>();
+    public Dictionary<string, string> Settings { get; set; } = new();
+    public List<IModulePermissionInfo> Permissions { get; set; } = new();
+
+    IEnumerable<IModulePermissionInfo> IModuleInfo.Permissions => Permissions;
+    IReadOnlyDictionary<string, string> IModuleInfo.Settings => Settings;
 }

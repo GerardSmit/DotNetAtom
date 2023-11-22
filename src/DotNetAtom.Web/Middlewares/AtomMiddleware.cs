@@ -1,8 +1,11 @@
 ﻿using System.Threading.Tasks;
 using DotNetAtom.Framework;
 using DotNetAtom.Portals;
+using DotNetAtom.Providers;
+using DotNetAtom.Sessions;
 using DotNetAtom.Tabs;
 using HttpStack;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ObjectPool;
 
 namespace DotNetAtom.Middlewares;
@@ -26,6 +29,11 @@ internal sealed class AtomMiddleware : IMiddleware
 
     public async Task Invoke(IHttpContext context, MiddlewareDelegate next)
     {
+        if (context.RequestServices.GetService<IHttpContextProvider>() is DefaultHttpContextProvider httpContextProvider)
+        {
+            httpContextProvider.HttpContext = context;
+        }
+
         var portalId = 0;
         var culture = _portalService.GetDefaultCulture(portalId);
 
@@ -36,7 +44,7 @@ internal sealed class AtomMiddleware : IMiddleware
         {
             match = homeTab;
         }
-        else if (!_tabRouter.Match(portalId, culture, context.Request, out match))
+        else if (!_tabRouter.Match(portalId, culture, context.Request.Path, out match))
         {
             await next(context);
             return;
@@ -50,6 +58,11 @@ internal sealed class AtomMiddleware : IMiddleware
 
         try
         {
+            if (context.RequestServices.GetService<IUserSessionService>() is { } userSessionService)
+            {
+                atomContext.PortalSettings.User = await userSessionService.GetCurrentUserAsync();
+            }
+
             atomFeature.AtomContext = atomContext;
             context.Features.Set<IAtomFeature>(atomFeature);
             await next(context);

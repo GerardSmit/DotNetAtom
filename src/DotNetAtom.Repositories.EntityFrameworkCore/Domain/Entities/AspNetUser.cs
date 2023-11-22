@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DotNetAtom.Entities;
 
-public class AspNetUser
+public class AspNetUser : IAspNetUser
 {
     public Guid ApplicationId { get; set; }
 
@@ -14,6 +14,12 @@ public class AspNetUser
     public string Username { get; set; }
 
     public string LoweredUsername { get; set; }
+
+    public string? MobileAlias { get; set; }
+
+    public bool IsAnonymous { get; set; }
+
+    public DateTime LastActivityDate { get; set; }
 
     public IList<User> User { get; set; }
 

@@ -2,15 +2,17 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
-using HttpStack;
+using Microsoft.Extensions.Primitives;
 
 namespace DotNetAtom.Tabs;
 
 public interface ITabRouter
 {
+    IChangeToken ChangeToken { get; }
+
     IReadOnlyList<ITabRoute> GetChildren(int? portalId, string? cultureCode, ITabRoute? parent);
 
-    bool Match(int? portalId, string? cultureCode, IHttpRequest request, [NotNullWhen(true)] out ITabRoute? match);
+    bool Match(int? portalId, string? cultureCode, string path, [NotNullWhen(true)] out ITabRoute? match);
 
     bool TryGetHomeTab(int? portalId, string? cultureCode, [NotNullWhen(true)] out ITabRoute? homeTab);
 

@@ -5,28 +5,34 @@ namespace DotNetAtom.Portals;
 
 internal readonly record struct PortalCultureKey(int PortalId, string? CultureCode)
 {
-    public static readonly IEqualityComparer<PortalCultureKey> IgnoreCaseComparer = new PortalKeyEqualityComparer(StringComparer.OrdinalIgnoreCase);
+    public static readonly IEqualityComparer<PortalCultureKey> OrdinalIgnoreCase = new PortalKeyEqualityComparer(StringComparer.OrdinalIgnoreCase);
 
-    private class PortalKeyEqualityComparer : IEqualityComparer<PortalCultureKey>
+    private class PortalKeyEqualityComparer(IEqualityComparer<string?> stringComparer)
+        : IEqualityComparer<PortalCultureKey>
     {
-        private readonly IEqualityComparer<string?> _stringComparer;
-
-        public PortalKeyEqualityComparer(IEqualityComparer<string?> stringComparer)
-        {
-            _stringComparer = stringComparer;
-        }
-
         public bool Equals(PortalCultureKey x, PortalCultureKey y)
         {
-
-            return x.PortalId == y.PortalId && _stringComparer.Equals(x.CultureCode, y.CultureCode);
+            return x.PortalId == y.PortalId && stringComparer.Equals(x.CultureCode, y.CultureCode);
         }
 
         public int GetHashCode(PortalCultureKey obj)
         {
-            return obj.CultureCode is not null
-                ? HashCode.Combine(obj.PortalId, _stringComparer.GetHashCode(obj.CultureCode))
-                : obj.PortalId;
+            if (obj.CultureCode is null)
+            {
+                return obj.PortalId;
+            }
+
+#if NET
+            return HashCode.Combine(obj.PortalId, stringComparer.GetHashCode(obj.CultureCode));
+#else
+            unchecked
+            {
+                var hash = 17;
+                hash = hash * 31 + obj.PortalId.GetHashCode();
+                hash = hash * 31 + stringComparer.GetHashCode(obj.CultureCode);
+                return hash;
+            }
+#endif
         }
     }
 }

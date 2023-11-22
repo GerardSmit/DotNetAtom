@@ -6,6 +6,7 @@ using DotNetAtom.Framework;
 using DotNetAtom.Portals;
 using DotNetAtom.Security;
 using DotNetAtom.Services.Authentication;
+using DotNetAtom.Sessions;
 using Microsoft.Extensions.Logging;
 using WebFormsCore.UI.HtmlControls;
 
@@ -13,6 +14,7 @@ namespace DotNetAtom.DesktopModules.Admin.Authentication;
 
 public partial class Login(
     IAuthenticationService authenticationService,
+    IUserSessionService userSessionService,
     ILogger<Login> logger
 ) : PortalModuleBase
 {
@@ -25,7 +27,14 @@ public partial class Login(
     {
         await base.OnInitAsync(token);
 
-        await LoadProvidersAsync();
+        if (User.UserId == -1)
+        {
+            await LoadProvidersAsync();
+        }
+        else if (Tab.TabSettings.ContainsKey("_IsLoginTab"))
+        {
+            Redirect();
+        }
     }
 
     private async ValueTask LoadProvidersAsync()
@@ -118,18 +127,25 @@ public partial class Login(
 
     private void BindLoginControl(AuthenticationLoginBase authLoginControl, string loginSrc, string type)
     {
-        var name = Path.GetFileNameWithoutExtension(loginSrc);
+        var name = Path.GetFileName(loginSrc);
 
         authLoginControl.AuthenticationType = type;
         authLoginControl.ID = $"{name}_{type}";
-        authLoginControl.LocalResourceFile = $"{authLoginControl.TemplateSourceDirectory}/App_LocalResource/{name}";
-        authLoginControl.RedirectUrl = this.RedirectUrl;
+        authLoginControl.LocalResourceFile = $"{authLoginControl.TemplateSourceDirectory}/App_LocalResources/{name}.resx";
+        authLoginControl.RedirectUrl = RedirectUrl;
 
         authLoginControl.UserAuthenticated += UserAuthenticated;
     }
 
-    private Task UserAuthenticated(AuthenticationLoginBase sender, UserAuthenticatedEventArgs e)
+    private async Task UserAuthenticated(AuthenticationLoginBase sender, UserAuthenticatedEventArgs e)
     {
-        return Task.CompletedTask;
+        await userSessionService.SetCurrentUserAsync(e.User);
+        Redirect();
+    }
+
+    private void Redirect()
+    {
+        Response.StatusCode = 302;
+        Response.Headers["Location"] = "/";
     }
 }

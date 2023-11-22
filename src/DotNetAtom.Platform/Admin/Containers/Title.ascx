@@ -1,0 +1,1 @@
+<%@ Control Language="C#" Inherits="DotNetAtom.UI.Containers.Controls.Title" CodeBehind="Title.ascx.cs" %>

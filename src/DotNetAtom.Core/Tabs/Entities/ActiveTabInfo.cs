@@ -35,6 +35,7 @@ public class ActiveTabInfo : ITabInfo, IEquatable<ActiveTabInfo>
     public string? Description => _tabInfo.Description;
 
     public string? SkinSrc => _tabInfo.SkinSrc;
+    public string? ContainerSrc => _tabInfo.ContainerSrc;
 
     public string? KeyWords => _tabInfo.KeyWords;
 

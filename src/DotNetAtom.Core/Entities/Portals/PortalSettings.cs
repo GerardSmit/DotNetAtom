@@ -17,6 +17,8 @@ public class PortalSettings : IPortalSettings
         set => _portal = value;
     }
 
+    public IUserInfo User { get; set; } = AnonymousUserInfo.Instance;
+
     public string? LogoFile
     {
         get => Portal.LogoFile;
@@ -30,6 +32,8 @@ public class PortalSettings : IPortalSettings
     }
 
     public string? CurrentSkinPath { get; set; }
+
+    public string? CurrentSkinDirectory { get; set; }
 
     public void Initialize(IPortalInfo portal, ITabInfo? tab)
     {
@@ -48,5 +52,6 @@ public class PortalSettings : IPortalSettings
         ActiveTab = null;
         _portal = null;
         CurrentSkinPath = null;
+        CurrentSkinDirectory = null;
     }
 }

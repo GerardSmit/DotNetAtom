@@ -86,7 +86,7 @@ internal class PortalInfo : IPortalInfo
 
     public required IReadOnlyDictionary<string, string> Settings { get; set; }
 
-    public static IPortalInfo FromEntity(PortalLocalization portalLocalization)
+    public static IPortalInfo FromEntity(PortalLocalization portalLocalization, List<HostSetting> hostSettings)
     {
         var portal = portalLocalization.Portal;
         var administrator = portalLocalization.Portal.Administrator;
@@ -99,6 +99,11 @@ internal class PortalInfo : IPortalInfo
         foreach (var setting in portal.Settings.Where(setting => setting.CultureCode == null))
         {
             settings.TryAdd(setting.SettingName, setting.SettingValue);
+        }
+
+        foreach (var setting in hostSettings)
+        {
+            settings.TryAdd(setting.Name, setting.Value);
         }
 
         return new PortalInfo

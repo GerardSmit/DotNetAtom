@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
 using DotNetAtom.Portals;
+using DotNetAtom.Primitives;
 using DotNetAtom.Tabs.Collections;
-using HttpStack;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace DotNetAtom.Tabs;
 
@@ -23,6 +23,7 @@ internal class TabRouter : ITabRouter
     private readonly ITabService _tabService;
     private readonly IPortalService _portalService;
     private readonly ILogger<TabRouter> _logger;
+    private SimpleChangeToken _changeToken = new();
 
     public TabRouter(ITabService tabService, IPortalService portalService, ILogger<TabRouter> logger)
     {
@@ -47,6 +48,8 @@ internal class TabRouter : ITabRouter
 
         return tabs;
     }
+
+    public IChangeToken ChangeToken => _changeToken;
 
     public IReadOnlyList<ITabRoute> GetChildren(int? portalId, string? cultureCode, ITabRoute? parent = null)
     {
@@ -102,13 +105,13 @@ internal class TabRouter : ITabRouter
         }
     }
 
-    public bool Match(int? portalId, string? cultureCode, IHttpRequest request, [NotNullWhen(true)] out ITabRoute? match)
+    public bool Match(int? portalId, string? cultureCode, string path, [NotNullWhen(true)] out ITabRoute? match)
     {
-        return TryGet(portalId, cultureCode, request, out match, Getter);
+        return TryGet(portalId, cultureCode, path, out match, Getter);
 
-        static bool Getter(IHttpRequest request, [NotNullWhen(true)] out ITabRoute? match, IRouteCollection tabs)
+        static bool Getter(string path, [NotNullWhen(true)] out ITabRoute? match, IRouteCollection tabs)
         {
-            return tabs.TryMatch(request, out match);
+            return tabs.TryMatch(path, out match);
         }
     }
 
@@ -280,6 +283,10 @@ internal class TabRouter : ITabRouter
                 }
             }
         }
+
+        var currentToken = _changeToken;
+        _changeToken = new SimpleChangeToken();
+        currentToken.OnChange();
 
         return Task.CompletedTask;
     }

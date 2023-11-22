@@ -8,7 +8,7 @@ namespace DotNetAtom.Portals;
 internal class PortalService : IPortalService
 {
     private readonly IPortalRepository _repository;
-    private Dictionary<PortalCultureKey, IPortalInfo> _portals = new(PortalCultureKey.IgnoreCaseComparer);
+    private Dictionary<PortalCultureKey, IPortalInfo> _portals = new(PortalCultureKey.OrdinalIgnoreCase);
     private Dictionary<int, string> _defaultCultures = new();
 
     public PortalService(IPortalRepository repository)
@@ -51,7 +51,7 @@ internal class PortalService : IPortalService
     {
         var portals = await _repository.GetPortalsAsync();
 
-        var result = new Dictionary<PortalCultureKey, IPortalInfo>(PortalCultureKey.IgnoreCaseComparer);
+        var result = new Dictionary<PortalCultureKey, IPortalInfo>(PortalCultureKey.OrdinalIgnoreCase);
         var defaultCultures = new Dictionary<int, string>();
 
         foreach (var portal in portals)

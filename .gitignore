@@ -401,3 +401,6 @@ FodyWeavers.xsd
 /.act
 
 appsettings.Development.json
+
+src/DotNetAtom.Platform/Portals/_default/Skins/
+src/DotNetAtom.Platform/Portals/_default/Containers/

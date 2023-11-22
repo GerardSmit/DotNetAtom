@@ -6,10 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DotNetNuke.Abstractions" Version="9.11.1" />
-        <PackageReference Include="DotNetNuke.Core" Version="9.11.1" />
-        <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.11.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="DotNetNuke.Abstractions" Version="9.13.0" />
+        <PackageReference Include="DotNetNuke.Core" Version="9.13.0" />
+        <PackageReference Include="DotNetNuke.DependencyInjection" Version="9.13.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,7 +19,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj" />
-      <ProjectReference Include="..\DotNetAtom.Core\DotNetAtom.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,6 +8,8 @@ using DotNetAtom.Portals;
 using DotNetAtom.Providers;
 using DotNetAtom.Skins;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WebFormsCore;
 using WebFormsCore.UI;
 
 namespace DotNetAtom;
@@ -20,9 +22,6 @@ public partial class Default : Page
     protected override async ValueTask OnInitAsync(CancellationToken token)
     {
         await base.OnInitAsync(token);
-
-        // Page.Csp.Enabled = true;
-        // Page.Csp.FontSrc.Add(new Uri("https://fonts.gstatic.com"));
 
         await LoadSkinAsync();
     }
@@ -47,7 +46,35 @@ public partial class Default : Page
         var skinService = Context.RequestServices.GetRequiredService<ISkinService>();
         skinSrc = skinService.GetSkinSrc(skinSrc, portal);
 
-        settings.CurrentSkinPath = Path.GetDirectoryName(skinSrc);
+        var webFormsEnvironment = Context.RequestServices.GetRequiredService<IWebFormsEnvironment>();
+
+        if (webFormsEnvironment.ContentRootPath is { } contentRootPath)
+        {
+            var directory = Path.GetDirectoryName(skinSrc);
+
+            settings.CurrentSkinDirectory = directory;
+
+            if (directory is not null && directory.StartsWith(contentRootPath, StringComparison.OrdinalIgnoreCase))
+            {
+                settings.CurrentSkinPath = directory.Substring(contentRootPath.Length).Replace('\\', '/');
+            }
+
+            if (settings.CurrentSkinPath is not null)
+            {
+                var skinCss = Path.Combine(settings.CurrentSkinPath, "skin.css");
+
+                if (skinCss.StartsWith(contentRootPath, StringComparison.OrdinalIgnoreCase) &&
+                    File.Exists(skinCss))
+                {
+                    Page.ClientScript.RegisterStartupStyleLink(typeof(Default), "SkinCss", skinCss.Substring(contentRootPath.Length).Replace('\\', '/'));
+                }
+            }
+
+            if (File.Exists(Path.Combine(contentRootPath, "Portals", "_default", "default.css")))
+            {
+                Page.ClientScript.RegisterStartupStyleLink(typeof(Default), "DefaultCss", "/Portals/_default/default.css");
+            }
+        }
 
         var skin = LoadControl(skinSrc);
         skin.ID = "dnn";

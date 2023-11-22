@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
+using DotNetAtom.Memory;
 using Microsoft.Extensions.Logging;
-using WebFormsCore;
 
 namespace DotNetAtom.Modules;
 
@@ -30,6 +30,11 @@ public class ModuleService : IModuleService
         if (info.ModuleDefinitionFriendlyName is not null)
         {
             return GetDefinition(info.ModuleDefinitionFriendlyName);
+        }
+
+        if (info is InMemoryModuleInfo { ModuleDefinition: {} module })
+        {
+            return module;
         }
 
         throw new KeyNotFoundException($"No module definition found for module {info.ModuleId}.");

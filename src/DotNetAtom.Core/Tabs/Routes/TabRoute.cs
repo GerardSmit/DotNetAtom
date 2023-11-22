@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using DotNetAtom.Entities;
-using HttpStack;
 
 namespace DotNetAtom.Tabs.Routes;
 
@@ -26,30 +25,23 @@ internal class TabRoute : ITabRoute
 
     private string DisplayPath => _paths.FirstOrDefault() ?? "";
 
-    public TabRoute(ITabInfo tabInfo, IEnumerable<PathString> paths)
+    public TabRoute(ITabInfo tabInfo, IEnumerable<string> paths)
     {
-        var stringValues = paths.Where(i => i.HasValue).Select(i => i.Value!);
-
         Tab = tabInfo;
 
 #if NET8_0_OR_GREATER
-        _paths = stringValues.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+        _paths = paths.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 #else
-        _paths = new List<string>(stringValues);
+        _paths = new List<string>(paths);
 #endif
     }
 
-    public bool IsMatch(IHttpRequest request)
+    public bool IsMatch(string path)
     {
-        if (!request.Path.HasValue)
-        {
-            return false;
-        }
-
 #if NET8_0_OR_GREATER
-        return _paths.Contains(request.Path.Value!);
+        return _paths.Contains(path!);
 #else
-        return _paths.Contains(request.Path.Value!, StringComparer.OrdinalIgnoreCase);
+        return _paths.Contains(path, StringComparer.OrdinalIgnoreCase);
 #endif
     }
 

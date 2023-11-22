@@ -5,15 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using DotNetAtom.Framework;
 using DotNetAtom.Modules;
+using DotNetAtom.Skins;
+using DotNetAtom.UI.Containers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebFormsCore.UI;
+using WebFormsCore.UI.HtmlControls;
 using WebFormsCore.UI.WebControls;
 
 namespace DotNetAtom.UI.Skins;
 
 public partial class Skin : UserControlBase, INamingContainer
 {
+    public string? SkinPath => PortalSettings.CurrentSkinPath;
+
     private static readonly List<string> PaneTagNames = new()
     {
         "td",
@@ -66,7 +71,9 @@ public partial class Skin : UserControlBase, INamingContainer
 
     private async Task LoadModulesAsync()
     {
-        var moduleService = ServiceProvider.GetRequiredService<IModuleControlService>();
+        var skinService = Context.RequestServices.GetRequiredService<ISkinService>();
+        var moduleControlService = ServiceProvider.GetRequiredService<IModuleControlService>();
+        var moduleService = Context.RequestServices.GetRequiredService<IModuleService>();
         var logger = ServiceProvider.GetRequiredService<ILogger<Skin>>();
 
         var ctl = Request.Query.TryGetValue("ctl", out var ctlValue)
@@ -108,17 +115,59 @@ public partial class Skin : UserControlBase, INamingContainer
                     throw new InvalidOperationException("No pane found for module");
                 }
 
-                var moduleContainer = WebActivator.CreateControl<ModuleContainer>();
-                moduleContainer.ModuleInfo = tabModule;
+                var moduleHost = WebActivator.CreateControl<ModuleHost>();
+                moduleHost.ModuleInfo = tabModule;
+                await pane.Controls.AddAsync(moduleHost);
 
-                var control = await moduleService.CreateModuleControlAsync(Page, PortalSettings, tabModule, controlKey);
+                var containerSrc = tabModule.ContainerSrc ?? Tab.ContainerSrc;
+
+                if (containerSrc is null && Tab.TabSettings.TryGetValue("DefaultPortalContainer", out var defaultContainerSrc))
+                {
+                    containerSrc = defaultContainerSrc;
+                }
+                else if (containerSrc is null && PortalSettings.Portal.Settings.TryGetValue("DefaultPortalContainer", out var portalDefaultContainerSrc))
+                {
+                    containerSrc = portalDefaultContainerSrc;
+                }
+
+                var control = await moduleControlService.CreateModuleControlAsync(Page, PortalSettings, moduleHost, tabModule, controlKey);
 
                 if (control != null)
                 {
-                    await moduleContainer.Controls.AddAsync(control);
-                }
+                    Control container;
 
-                await pane.Controls.AddAsync(moduleContainer);
+                    moduleHost.ModuleControl = (control as IModuleControl)!;
+
+                    if (containerSrc is not null)
+                    {
+                        var path = skinService.GetSkinSrc(containerSrc, PortalSettings.Portal);
+                        var containerControl = LoadControl(path);
+
+                        await moduleHost.Controls.AddAsync(containerControl);
+
+                        if (containerControl is INamingContainer && containerControl.FindControl("ContentPane") is {} controlContainer)
+                        {
+                            if (controlContainer is HtmlGenericControl htmlControl)
+                            {
+                                var module = moduleService.GetDefinition(tabModule);
+
+                                htmlControl.Attributes["class"] = $"DNNModuleContent Mod{module.DesktopModule.ModuleName}C";
+                            }
+
+                            container = controlContainer;
+                        }
+                        else
+                        {
+                            container = containerControl;
+                        }
+                    }
+                    else
+                    {
+                        container = moduleHost;
+                    }
+
+                    await container.Controls.AddAsync(control);
+                }
             }
             catch (Exception e)
             {

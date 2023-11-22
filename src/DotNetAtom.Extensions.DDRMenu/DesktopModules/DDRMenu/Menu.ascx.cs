@@ -8,48 +8,49 @@ using DotNetAtom.Framework;
 using DotNetAtom.Tabs;
 using DotNetAtom.TemplateEngine;
 using DotNetAtom.TemplateEngine.Items;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using WebFormsCore;
 using WebFormsCore.UI;
 
 namespace DotNetAtom.DesktopModules.DDRMenu;
 
-public partial class Menu : PortalModuleBase
+public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostEnvironment environment) : PortalModuleBase
 {
-    private readonly ITabRouter _tabRouter;
     private static readonly char[] AnyOf = { '/', '\\' };
     private DdrMenu? _menu;
-
-    public Menu(ITabRouter tabRouter)
-    {
-        _tabRouter = tabRouter;
-    }
 
     [ViewState] public string? MenuStyle { get; set; }
 
     [ViewState] public string? NodeSelector { get; set; }
 
-    protected override void OnPreRender(EventArgs args)
+    protected override async ValueTask OnPreRenderAsync(CancellationToken token)
     {
-        base.OnPreRender(args);
+        await base.OnPreRenderAsync(token);
 
         if (MenuStyle is not null && PortalSettings.CurrentSkinPath is {} skinPath)
         {
+            var fileProvider = environment.ContentRootFileProvider;
             var lastSeparator = MenuStyle.LastIndexOfAny(AnyOf);
             var name = lastSeparator == -1 ? MenuStyle : MenuStyle.Substring(lastSeparator + 1);
-            var path = Path.Combine(skinPath, MenuStyle, name + ".txt");
-            var css = Path.Combine(skinPath, MenuStyle, name + ".css");
+            var path = $"{skinPath}/{MenuStyle}/{name}.txt";
+            var cacheKey = $"DdrMenu:{path}";
 
-            if (File.Exists(path))
+            if (memoryCache.TryGetValue(cacheKey, out _menu))
             {
-                var menu = DdrMenu.Parse(File.ReadAllText(path).AsSpan());
-
-                _menu = menu;
+                return;
             }
 
-            if (File.Exists(css))
-            {
-                Page.ClientScript.RegisterStartupStyle(typeof(Menu), MenuStyle, File.ReadAllText(css), true);
-            }
+            var file = fileProvider.GetFileInfo(path);
+            var changeToken = fileProvider.Watch(path);
+            var content = file.Exists ? await file.ReadAllTextAsync() : null;
+            var ddrMenu = content is null ? null : DdrMenu.Parse(content.AsSpan());
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+                .AddExpirationToken(changeToken);
+
+            _menu = memoryCache.Set(cacheKey, ddrMenu, cacheEntryOptions);
         }
     }
 
@@ -67,11 +68,18 @@ public partial class Menu : PortalModuleBase
 
     private RootItem CreateRootItem()
     {
-        var children = new List<IMenuItem>();
         var portalId = PortalSettings.Portal.PortalId;
         var cultureCode = PortalSettings.Portal.CultureCode;
+        var cacheKey = $"DdrMenu:RootItem:{portalId}:{cultureCode}";
 
-        foreach (var route in _tabRouter.GetChildren(portalId, cultureCode, null))
+        if (memoryCache.TryGetValue(cacheKey, out RootItem? rootItem) && rootItem is not null)
+        {
+            return rootItem;
+        }
+
+        var children = new List<IMenuItem>();
+
+        foreach (var route in tabRouter.GetChildren(portalId, cultureCode, null))
         {
             if (!route.Tab.IsVisible)
             {
@@ -84,7 +92,12 @@ public partial class Menu : PortalModuleBase
             }
         }
 
-        return new RootItem(children);
+        var item = new RootItem(children);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromMinutes(5))
+            .AddExpirationToken(tabRouter.ChangeToken);
+
+        return memoryCache.Set(cacheKey, item, cacheEntryOptions);
     }
 
     private TabItem GetTabItem(ITabRoute route)
@@ -93,7 +106,7 @@ public partial class Menu : PortalModuleBase
         var portalId = PortalSettings.Portal.PortalId;
         var cultureCode = PortalSettings.Portal.CultureCode;
 
-        foreach (var child in _tabRouter.GetChildren(portalId, cultureCode, route))
+        foreach (var child in tabRouter.GetChildren(portalId, cultureCode, route))
         {
             if (!child.Tab.IsVisible)
             {

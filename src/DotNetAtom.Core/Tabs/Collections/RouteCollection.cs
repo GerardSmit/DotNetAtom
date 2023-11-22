@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using DotNetAtom.Entities;
 using DotNetAtom.Tabs.Routes;
-using HttpStack;
 
 namespace DotNetAtom.Tabs.Collections;
 
@@ -23,7 +22,7 @@ internal class RouteCollection : IRouteCollection
     public void Add(ITabInfo tab)
     {
         var path = tab.TabPath.Replace("//", "/");
-        var route = new TabRoute(tab, new PathString[]
+        var route = new TabRoute(tab, new[]
         {
             path,
             $"{path}/",
@@ -63,11 +62,11 @@ internal class RouteCollection : IRouteCollection
 
     public ITabRoute this[int index] => _routes[index];
 
-    public bool TryMatch(IHttpRequest request, [NotNullWhen(true)] out ITabRoute? match)
+    public bool TryMatch(string path, [NotNullWhen(true)] out ITabRoute? match)
     {
         foreach (var route in _routes)
         {
-            if (route.IsMatch(request))
+            if (route.IsMatch(path))
             {
                 match = route;
                 return true;

@@ -23,8 +23,21 @@ public class LoginTabProvider : ITabProvider
                     {
                         new InMemoryModuleInfo
                         {
-                            ModuleDefinitionFriendlyName = "Account Login"
+                            ModuleDefinition = new InMemoryModuleDefinition
+                            {
+                                Controls =
+                                {
+                                    [null] = new InMemoryModuleControlInfo
+                                    {
+                                        ControlSrc = "DesktopModules/Admin/Authentication/Login.ascx"
+                                    }
+                                }
+                            }
                         }
+                    },
+                    TabSettings =
+                    {
+                        ["_IsLoginTab"] = "true"
                     }
                 }
             }

@@ -14,9 +14,9 @@ public readonly record struct StringKey(string? Value)
     [MemberNotNullWhen(true, nameof(Value))]
     public bool HasValue => !string.IsNullOrEmpty(Value);
 
-    public static implicit operator StringKey(string? cultureCode) => new(cultureCode);
+    public static implicit operator StringKey(string? value) => new(value);
 
-    public static implicit operator string?(StringKey cultureCode) => cultureCode.Value;
+    public static implicit operator string?(StringKey value) => value.Value;
 }
 
 public sealed class StringKeyComparer : IComparer<StringKey>, IEqualityComparer<StringKey>

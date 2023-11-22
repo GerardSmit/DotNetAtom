@@ -74,6 +74,8 @@ public class Portal : IEntity, ITimestamp
     public ICollection<Tab> Tabs { get; set; } = new List<Tab>();
 
     public ICollection<PortalDesktopModule> PortalDesktopModule { get; set; } = new List<PortalDesktopModule>();
+
+    public ICollection<UserPortal> UserPortals { get; set; } = new List<UserPortal>();
 }
 
 public class PortalTypeConfiguration : IEntityTypeConfiguration<Portal>
@@ -115,5 +117,11 @@ public class PortalTypeConfiguration : IEntityTypeConfiguration<Portal>
             .WithMany()
             .HasForeignKey(p => p.RegisteredRoleId)
             .HasPrincipalKey(r => r.Id);
+
+        builder.HasMany(u => u.UserPortals)
+            .WithOne(u => u.Portal)
+            .HasForeignKey(u => u.PortalId)
+            .HasPrincipalKey(u => u.Id)
+            .IsRequired();
     }
 }

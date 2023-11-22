@@ -1,11 +1,12 @@
 using System;
-using System.Reflection;
 using DotNetAtom;
 using DotNetAtom.DesktopModules.HTML;
+using DotNetAtom.EntityFrameworkCore;
+using DotNetAtom.Options;
 using DotNetAtom.Providers;
-using DotNetAtom.Repositories.DapperAOT;
 using HttpStack.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -13,6 +14,9 @@ using Microsoft.Extensions.FileProviders;
 new HtmlModule(); // TODO: Remove this line when assembly loading is fixed.
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOptions<MachineOptions>()
+    .Bind(builder.Configuration.GetSection("Machine"));
 
 builder.Services.AddDotNetAtom(atom =>
 {
@@ -23,8 +27,12 @@ builder.Services.AddDotNetAtom(atom =>
         throw new InvalidOperationException("Connection string is not found.");
     }
 
-    atom.AddDapperAOT(connectionString);
-    atom.AddTripleDES("5FDB5CE1F4531470763A34A78398E3D355EFF4EE57426EFB");
+    atom.AddAspNetPasswordHasher();
+
+    atom.AddEntityFrameworkCore(options =>
+    {
+        options.UseSqlServer(connectionString);
+    });
 });
 
 builder.Services.AddSingleton<ITabProvider, LoginTabProvider>();

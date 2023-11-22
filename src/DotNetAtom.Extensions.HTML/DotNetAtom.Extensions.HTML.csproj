@@ -1,4 +1,4 @@
-﻿<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.33">
+﻿<Project Sdk="WebFormsCore.SDK/0.0.1-alpha.38">
 
     <PropertyGroup>
         <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
@@ -6,11 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj" />
+        <ProjectReference Include="..\DotNetAtom.Web.Abstractions\DotNetAtom.Web.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="WebFormsCore.Extensions.TinyMCE" Version="0.0.1-alpha.33" />
+        <PackageReference Include="WebFormsCore.Extensions.TinyMCE" Version="0.0.1-alpha.38"/>
     </ItemGroup>
 
 </Project>

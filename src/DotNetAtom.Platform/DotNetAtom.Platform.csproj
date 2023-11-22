@@ -1,4 +1,4 @@
-<Project Sdk="WebFormsCore.SDK.AspNetCore/0.0.1-alpha.33">
+<Project Sdk="WebFormsCore.SDK.AspNetCore/0.0.1-alpha.38">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -6,28 +6,24 @@
         <Nullable>enable</Nullable>
         <RootNamespace>DotNetAtom</RootNamespace>
         <OutputType>Exe</OutputType>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="$(TargetFramework) == 'net8.0'">
-        <PublishAot>true</PublishAot>
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <IlcGenerateMstatFile>true</IlcGenerateMstatFile>
-        <IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
+        <NoWarn>$(NoWarn);WEBFORMS0001;ASP0001;ASP0003;ASP0005</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.Login\DotNetAtom.Extensions.Login.csproj" />
-        <ProjectReference Include="..\DotNetAtom.Providers.Encryption\DotNetAtom.Providers.Encryption.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.DDRMenu\DotNetAtom.Extensions.DDRMenu.csproj" />
         <ProjectReference Include="..\DotNetAtom.Extensions.HTML\DotNetAtom.Extensions.HTML.csproj" />
-        <ProjectReference Include="..\DotNetAtom.Repositories.DapperAOT\DotNetAtom.Repositories.DapperAOT.csproj"/>
+        <ProjectReference Include="..\DotNetAtom.PasswordHasher.AspNet\DotNetAtom.PasswordHasher.AspNet.csproj" />
+        <ProjectReference Include="..\DotNetAtom.Repositories.EntityFrameworkCore\DotNetAtom.Repositories.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\DotNetAtom.Web\DotNetAtom.Web.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="HttpStack.Builder" Version="0.0.1-alpha.12"/>
         <PackageReference Include="HttpStack.StaticFiles" Version="0.0.1-alpha.12"/>
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0-preview.7.23375.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,6 +36,11 @@
         <None Update="DesktopModules\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Portals\_default\Skins\Expedient\js\vendor\colorbox-master\bower.json" />
+      <_ContentIncludedByDefault Remove="Portals\_default\Skins\Expedient\js\vendor\colorbox-master\colorbox.jquery.json" />
     </ItemGroup>
 
 </Project>

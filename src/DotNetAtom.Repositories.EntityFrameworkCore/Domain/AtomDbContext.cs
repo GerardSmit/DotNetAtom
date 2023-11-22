@@ -70,6 +70,8 @@ public abstract class AtomDbContext : DbContext
 
     public DbSet<User> User { get; set; } = null!;
 
+    public DbSet<UserPortal> UserPortal { get; set; } = null!;
+
     public DbSet<UserRole> UserRole { get; set; } = null!;
 
     public DbSet<Package> Package { get; set; } = null!;

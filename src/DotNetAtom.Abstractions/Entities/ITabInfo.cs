@@ -32,6 +32,8 @@ public interface ITabInfo
 
     string? SkinSrc { get; }
 
+    string? ContainerSrc { get; }
+
     string? KeyWords { get; }
 
     string? PageHeadText { get; }

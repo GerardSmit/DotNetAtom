@@ -2,7 +2,9 @@
 
 public interface IPasswordHasher
 {
-    bool Validate(int format, string hashedPassword, string passwordSalt, string password);
+    int Format { get; }
+
+    bool Validate(int format, string hashedPassword, string password, string passwordSalt);
 
     string HashPassword(int format, string password, string passwordSalt);
 }

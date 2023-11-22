@@ -18,6 +18,10 @@ public class PortalRepository : IPortalRepository
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
+        var hostSettings = await dbContext.HostSetting
+            .AsNoTracking()
+            .ToListAsync();
+
         return await dbContext.PortalLocalization
             .Include(e => e.Portal.Settings)
             .Include(e => e.Portal.Administrator)
@@ -25,7 +29,7 @@ public class PortalRepository : IPortalRepository
             .Include(e => e.Portal.RegisteredRole)
             .AsSplitQuery()
             .AsAsyncEnumerable()
-            .Select(PortalInfo.FromEntity)
+            .Select(p => PortalInfo.FromEntity(p, hostSettings))
             .ToArrayAsync();
     }
 }

@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using DotNetAtom.Entities;
-using HttpStack;
 
 namespace DotNetAtom.Tabs;
 
@@ -10,7 +9,7 @@ public interface ITabRoute
 
     ITabRoute? Parent { get; set; }
 
-    bool IsMatch(IHttpRequest request);
+    bool IsMatch(string path);
 
     bool TryGetPath([NotNullWhen(true)] out string? path);
 }

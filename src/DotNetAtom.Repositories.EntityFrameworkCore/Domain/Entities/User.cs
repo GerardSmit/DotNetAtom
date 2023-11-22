@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,15 +17,28 @@ public class User : IEntity
 
     public string? Email { get; set; }
 
+    public int? AffiliateId { get; set; }
+
     public bool IsSuperUser { get; set; }
 
+    public string DisplayName { get; set; } = default!;
+
     public AspNetUser AspNetUser { get; set; } = null!;
+
+    public Guid? PasswordResetToken { get; set; }
+
+    public DateTime? PasswordResetExpiration { get; set; }
+
+
+    public string? LastIpAddress { get; set; }
 
     public ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
 
     public ICollection<TabPermission> TabPermissions { get; set; } = new List<TabPermission>();
 
     public ICollection<ModulePermission> ModulePermissions { get; set; } = new List<ModulePermission>();
+
+    public ICollection<UserPortal> UserPortals { get; set; } = new List<UserPortal>();
 }
 
 public class UserTypeConfiguration : IEntityTypeConfiguration<User>
@@ -36,6 +50,9 @@ public class UserTypeConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(p => p.Id)
             .HasColumnName("UserID");
+
+        builder.Property(u => u.LastIpAddress)
+            .HasColumnName("LastIPAddress");
 
         builder.HasOne(u => u.AspNetUser)
             .WithMany(u => u.User)
@@ -56,6 +73,12 @@ public class UserTypeConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder.HasMany(u => u.ModulePermissions)
+            .WithOne(u => u.User)
+            .HasForeignKey(u => u.UserId)
+            .HasPrincipalKey(u => u.Id)
+            .IsRequired();
+
+        builder.HasMany(u => u.UserPortals)
             .WithOne(u => u.User)
             .HasForeignKey(u => u.UserId)
             .HasPrincipalKey(u => u.Id)

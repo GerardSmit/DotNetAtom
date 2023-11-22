@@ -26,6 +26,7 @@ public static class BuilderExtensions
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
         builder.Services.AddSingleton<ITabRepository, TabRepository>();
         builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
+        builder.Services.AddSingleton<IAspNetRepository, AspNetRepository>();
 
         var types = typeof(BuilderExtensions).Assembly
             .GetTypes()

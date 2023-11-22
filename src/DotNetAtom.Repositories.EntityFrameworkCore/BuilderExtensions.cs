@@ -2,6 +2,7 @@
 using DotNetAtom.Application;
 using DotNetAtom.Database;
 using DotNetAtom.EntityFrameworkCore.Repositories.Applications;
+using DotNetAtom.EntityFrameworkCore.Repositories.AspNetUser;
 using DotNetAtom.EntityFrameworkCore.Repositories.Tabs;
 using DotNetAtom.Infrastructure.EntityFrameworkCore;
 using DotNetAtom.Modules;
@@ -33,6 +34,8 @@ public static class BuilderExtensions
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
         builder.Services.AddSingleton<ITabRepository, TabRepository>();
         builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
+        builder.Services.AddSingleton<IAspNetUserRepository, AspNetUserRepository>();
+        builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
         builder.Services.AddDbContextFactory<TContext>(b =>
         {

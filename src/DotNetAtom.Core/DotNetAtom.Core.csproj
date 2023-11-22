@@ -14,11 +14,17 @@
 
     <ItemGroup>
         <PackageReference Include="Ben.StringIntern" Version="0.1.8"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\DotNetAtom.Abstractions\DotNetAtom.Abstractions.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Entities\User\" />
     </ItemGroup>
 
 

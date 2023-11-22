@@ -20,6 +20,7 @@ public class InMemoryTabInfo : ITabInfo
     public bool DisableLink { get; set; }
     public string? Description { get; set; }
     public string? SkinSrc { get; set; }
+    public string? ContainerSrc { get; set; }
     public string? KeyWords { get; set; }
     public string? PageHeadText { get; set; }
     public string? Url { get; set; }

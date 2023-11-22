@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DotNetAtom.UI.Skins;
 using WebFormsCore.UI;
 
-namespace DotNetNuke.UI.Skins.Controls;
+namespace DotNetAtom.UI.Skins.Controls;
 
 public partial class Logo : SkinObjectBase
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using DotNetAtom.Application;
+using DotNetAtom.Localization;
 using DotNetAtom.Modules;
-using DotNetAtom.Modules.Factories;
 using DotNetAtom.Portals;
 using DotNetAtom.Providers;
 using DotNetAtom.Security;
@@ -21,11 +21,10 @@ public static class ServiceExtensions
 
         services.AddHostedService<InitializeService>();
 
-        services.TryAddSingleton<IAtomGlobals, AtomGlobals>();
+        services.AddMemoryCache();
 
-        // Control factories
-        services.TryAddSingleton<IModuleControlFactory, WebFormsControlFactory>();
-        services.TryAddSingleton<IModuleControlService, ModuleControlService>();
+        services.TryAddSingleton<IAtomGlobals, AtomGlobals>();
+        services.TryAddSingleton<IPasswordHasher, ClearPasswordHasher>();
 
         // Default providers
         services.TryAddSingleton<ITabTitleProvider, TabTitleProvider>();
@@ -38,6 +37,8 @@ public static class ServiceExtensions
         services.TryAddSingleton<ISkinService, SkinService>();
         services.TryAddSingleton<IModuleService, ModuleService>();
         services.TryAddSingleton<IAuthenticationService, AuthenticationService>();
+        services.TryAddSingleton<ILocalizationService, LocalizationService>();
+        services.TryAddSingleton<IUserService, UserService>();
 
         // Application
         services.TryAddSingleton<IAtomContextFactory, AtomContextFactory>();
