@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DotNetAtom.Entities.Portals;
 using DotNetAtom.TemplateEngine.Expressions;
 using WebFormsCore.UI;
 
@@ -12,9 +13,9 @@ public class DdrMenu(BodyExpression root)
 
     public BodyExpression Root { get; } = root;
 
-    public ValueTask RenderAsync(IMenuItem item, HtmlTextWriter writer)
+    public ValueTask RenderAsync(IMenuItem item, HtmlTextWriter writer, IPortalSettings settings)
     {
-        return Root.WriteAsync(this, item, writer);
+        return Root.WriteAsync(this, item, writer, settings);
     }
 
     public static DdrMenu Parse(ReadOnlySpan<char> remaining)

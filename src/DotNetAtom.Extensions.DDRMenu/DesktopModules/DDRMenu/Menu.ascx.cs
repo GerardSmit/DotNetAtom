@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetAtom.Entities;
+using DotNetAtom.Entities.Portals;
 using DotNetAtom.Framework;
 using DotNetAtom.Tabs;
 using DotNetAtom.TemplateEngine;
@@ -61,15 +62,14 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
             return default;
         }
 
-        var item = CreateRootItem();
+        var settings = PortalSettings;
+        var item = CreateRootItem(settings.Portal.PortalId, settings.Portal.CultureCode);
 
-        return _menu.RenderAsync(item, writer);
+        return _menu.RenderAsync(item, writer, settings);
     }
 
-    private RootItem CreateRootItem()
+    private RootItem CreateRootItem(int portalId, string cultureCode)
     {
-        var portalId = PortalSettings.Portal.PortalId;
-        var cultureCode = PortalSettings.Portal.CultureCode;
         var cacheKey = $"DdrMenu:RootItem:{portalId}:{cultureCode}";
 
         if (memoryCache.TryGetValue(cacheKey, out RootItem? rootItem) && rootItem is not null)
@@ -88,7 +88,7 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
 
             if (!route.Tab.ParentId.HasValue)
             {
-                children.Add(GetTabItem(route));
+                children.Add(GetTabItem(portalId, cultureCode, route));
             }
         }
 
@@ -100,11 +100,9 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
         return memoryCache.Set(cacheKey, item, cacheEntryOptions);
     }
 
-    private TabItem GetTabItem(ITabRoute route)
+    private TabItem GetTabItem(int portalId, string cultureCode, ITabRoute route)
     {
         var tabChildren = new List<IMenuItem>();
-        var portalId = PortalSettings.Portal.PortalId;
-        var cultureCode = PortalSettings.Portal.CultureCode;
 
         foreach (var child in tabRouter.GetChildren(portalId, cultureCode, route))
         {
@@ -113,18 +111,16 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
                 continue;
             }
 
-            tabChildren.Add(GetTabItem(child));
+            tabChildren.Add(GetTabItem(portalId, cultureCode, child));
         }
 
         string? path = null;
-
-        var isActive = PortalSettings.ActiveTab != null && PortalSettings.ActiveTab.Equals(route.Tab);
 
         if (route.TryGetPath(out var pathString))
         {
             path = pathString;
         }
 
-        return new TabItem(route.Tab, tabChildren, path, isActive);
+        return new TabItem(route.Tab, tabChildren, path);
     }
 }
