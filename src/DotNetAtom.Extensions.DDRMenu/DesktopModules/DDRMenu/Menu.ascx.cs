@@ -31,7 +31,6 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
 
         if (MenuStyle is not null && PortalSettings.CurrentSkinPath is {} skinPath)
         {
-            var fileProvider = environment.ContentRootFileProvider;
             var lastSeparator = MenuStyle.LastIndexOfAny(AnyOf);
             var name = lastSeparator == -1 ? MenuStyle : MenuStyle.Substring(lastSeparator + 1);
             var path = $"{skinPath}/{MenuStyle}/{name}.txt";
@@ -42,6 +41,7 @@ public partial class Menu(IMemoryCache memoryCache, ITabRouter tabRouter, IHostE
                 return;
             }
 
+            var fileProvider = environment.ContentRootFileProvider;
             var file = fileProvider.GetFileInfo(path);
             var changeToken = fileProvider.Watch(path);
             var content = file.Exists ? await file.ReadAllTextAsync() : null;

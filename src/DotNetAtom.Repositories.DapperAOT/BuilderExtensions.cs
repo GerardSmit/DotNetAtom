@@ -1,8 +1,6 @@
 ﻿#pragma warning disable IL2026
 #pragma warning disable IL2072
 
-using System.Linq;
-using Dapper;
 using DotNetAtom.Application;
 using DotNetAtom.EntityFrameworkCore.Repositories.Applications;
 using DotNetAtom.EntityFrameworkCore.Repositories.Tabs;
@@ -10,6 +8,7 @@ using DotNetAtom.Infrastructure.EntityFrameworkCore;
 using DotNetAtom.Modules;
 using DotNetAtom.Portals;
 using DotNetAtom.Repositories.DapperAOT.Repositories.Security;
+using DotNetAtom.Repositories.DapperAOT.Repositories.Users;
 using DotNetAtom.Security;
 using DotNetAtom.Tabs;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,16 +25,8 @@ public static class BuilderExtensions
         builder.Services.AddSingleton<IApplicationRepository, ApplicationRepository>();
         builder.Services.AddSingleton<ITabRepository, TabRepository>();
         builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
-        builder.Services.AddSingleton<IAspNetRepository, AspNetRepository>();
-
-        var types = typeof(BuilderExtensions).Assembly
-            .GetTypes()
-            .Where(i => i.Namespace != null && i.Namespace.StartsWith("DotNetAtom.Entities"));
-
-        foreach (var type in types)
-        {
-            SqlMapper.SetTypeMap(type, new ColumnAttributeTypeMapper(type));
-        }
+        builder.Services.AddSingleton<IAspNetUserRepository, AspNetUserRepository>();
+        builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
         return builder;
     }

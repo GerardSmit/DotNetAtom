@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Dapper;
+using DotNetAtom.Application;
 using DotNetAtom.Entities;
 using DotNetAtom.Security;
 
 namespace DotNetAtom.Repositories.DapperAOT.Repositories.Security;
 
-internal class AspNetRepository : IAspNetRepository
+internal class AspNetUserRepository : IAspNetUserRepository
 {
 	private readonly ConnectionFactory _connectionFactory;
 
-	public AspNetRepository(ConnectionFactory connectionFactory)
+	public AspNetUserRepository(ConnectionFactory connectionFactory)
 	{
 		_connectionFactory = connectionFactory;
 	}

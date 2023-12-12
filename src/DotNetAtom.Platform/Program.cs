@@ -5,6 +5,7 @@ using DotNetAtom.DesktopModules.HTML;
 using DotNetAtom.EntityFrameworkCore;
 using DotNetAtom.Options;
 using DotNetAtom.Providers;
+using DotNetAtom.Repositories.DapperAOT;
 using HttpStack.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -31,10 +32,14 @@ builder.Services.AddDotNetAtom(atom =>
 
     atom.AddAspNetPasswordHasher();
 
+    /*
     atom.AddEntityFrameworkCore(options =>
     {
         options.UseSqlServer(connectionString);
     });
+    */
+
+    atom.AddDapperAOT(connectionString);
 });
 
 builder.Services.AddSingleton<ITabProvider, LoginTabProvider>();

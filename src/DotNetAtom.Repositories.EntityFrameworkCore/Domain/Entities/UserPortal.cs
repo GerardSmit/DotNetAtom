@@ -23,14 +23,6 @@ public class UserPortal
 	public bool IsDeleted { get; set; }
 
 	public bool RefreshRoles { get; set; }
-	
-	public string? VanityUrl { get; set; }
-
-	public bool HasAgreedToTerms { get; set; }
-
-	public DateTime? HasAgreedToTermsOn { get; set; }
-
-	public bool RequestsRemoval { get; set; }
 }
 
 public class UserPortalTypeConfiguration : IEntityTypeConfiguration<UserPortal>

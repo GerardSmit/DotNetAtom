@@ -45,19 +45,13 @@ public class UserRepository : IUserRepository
 				AffiliateId = u.User.AffiliateId,
 				DisplayName = u.User.DisplayName,
 				FirstName = u.User.FirstName,
-				HasAgreedToTerms = u.HasAgreedToTerms,
 				UserId = u.User.Id,
 				PortalId = u.PortalId,
 				IsSuperUser = u.User.IsSuperUser,
 				IsAdmin = u.User.IsSuperUser || u.User.Roles.Any(r => r.RoleId == u.Portal.AdministratorRoleId),
 				IsDeleted = u.IsDeleted,
 				LastName = u.User.LastName,
-				RequestsRemoval = u.RequestsRemoval,
-				VanityUrl = u.VanityUrl,
-				PasswordResetExpiration = u.User.PasswordResetExpiration,
-				PasswordResetToken = u.User.PasswordResetToken,
-				LastIPAddress = u.User.LastIpAddress,
-				HasAgreedToTermsOn = u.HasAgreedToTermsOn
+				LastIPAddress = u.User.LastIpAddress
 			});
 	}
 }

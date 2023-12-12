@@ -31,7 +31,7 @@ public partial class Login(
         {
             await LoadProvidersAsync();
         }
-        else if (Tab.TabSettings.ContainsKey("_IsLoginTab"))
+        else if (Tab.TabSettings.ContainsKey("_IsLoginTab") || Tab.TabId == PortalSettings.Portal.LoginTabId)
         {
             Redirect();
         }

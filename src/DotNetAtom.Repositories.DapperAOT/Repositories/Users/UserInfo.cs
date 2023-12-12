@@ -2,7 +2,7 @@
 using System.Linq;
 using DotNetAtom.Entities;
 
-namespace DotNetAtom.Repositories.EntityFrameworkCore.Repositories.Security;
+namespace DotNetAtom.Repositories.DapperAOT.Repositories.Security;
 
 public class UserInfo : IUserInfo
 {
@@ -14,6 +14,10 @@ public class UserInfo : IUserInfo
 
 	public string FirstName { get; set; }
 
+	public bool HasAgreedToTerms { get; set; }
+
+	public DateTime? HasAgreedToTermsOn { get; set; }
+
 	public bool IsAdmin { get; set; }
 
 	public bool IsDeleted { get; set; }
@@ -24,13 +28,21 @@ public class UserInfo : IUserInfo
 
 	public string LastName { get; set; }
 
+	public DateTime? PasswordResetExpiration { get; set; }
+
+	public Guid? PasswordResetToken { get; set; }
+
 	public int PortalId { get; set; }
+
+	public bool RequestsRemoval { get; set; }
 
 	public string[] Roles { get; set; }
 
 	public int UserId { get; set; }
 
 	public string Username { get; set; }
+
+	public string? VanityUrl { get; set; }
 
 	public bool IsInRole(string role)
 	{

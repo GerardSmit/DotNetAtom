@@ -58,11 +58,14 @@ internal class TabInfo : ITabInfo
 
     public bool IsDeleted { get; }
 
+    public bool IsAdmin { get; set; }
+
     public bool DisableLink { get; }
 
     public string? Description { get; }
 
     public string? SkinSrc { get; }
+    public string? ContainerSrc { get; set; }
 
     public string? KeyWords { get; }
 
